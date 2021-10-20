@@ -1,0 +1,189 @@
+html, body {
+  background: #F7F8F9;
+}
+
+/*
+ * Colors
+ */
+$white: #FFFFFF;
+
+$gray-bright: #7B84A1;
+$gray-regular: #646D8C;
+$gray-dark: #5A6485;
+$gray-light-1: #F7F8F9;
+$gray-light-2: #EFF0F3;
+$gray-light-3: #E8E9EE;
+
+$red-bright: #ED3D39;
+$red-regular: #E80C08;
+$red-dark: #D10B07;
+$red-light-1: #FEF3F3;
+$red-light-2: #FDE7E6;
+$red-light-3: #FCDBDA;
+
+$green-bright: #74AC45;
+$green-regular: #65A330;
+$green-dark: #5B932B;
+$green-light-1: #F7FAF5;
+$green-light-2: #F0F6EA;
+$green-light-3: #E8F1E0;
+
+$blue-bright: #3B4D94;
+$blue-regular: #253988;
+$blue-dark: #21337A;
+$blue-light-1: #F4F5F9;
+$blue-light-2: #E9EBF3;
+$blue-light-3: #DEE1ED;
+
+$yellow-bright: #ECC43B;
+$yellow-regular: #E7B300;
+$yellow-dark: #DEAD05;
+$yellow-light-1: #FEFBF2;
+$yellow-light-2: #FDF7E5;
+$yellow-light-3: #FBF4D9;
+
+$pink-bright: #D13499;
+$pink-regular: #C6017F;
+$pink-dark: #B20172;
+$pink-light-1: #FCF2F9;
+$pink-light-2: #F9E6F2;
+$pink-light-3: #F6D9EC;
+
+$black-purple-bright: #311F58;
+$black-purple-regular: #231444;
+$black-purple-dark: #1C1036;
+$black-purple-light-1: #F4F3F6;
+$black-purple-light-2: #E9E7EC;
+$black-purple-light-3: #DEDCE3;
+
+/*
+ * Text
+ */
+$text-white: $white;
+$text-black: #231444;
+$text-gray-regular: $gray-regular;
+$text-gray-dark: $gray-dark;
+$text-blue: #253988;
+$text-green: #65A330;
+$text-pink: #C6017F;
+$text-yellow: #E7B300;
+$text-red: #E80C08;
+
+/*
+ * Borders
+ */
+$border-light: #F2F3F8;
+$border-regular: #E5E7F1;
+$border-dark: #DBDEEB;
+
+/*
+ * Misc
+ */
+$transition-duration: 0.2s;
+
+/*
+ * Mixins
+ */
+@mixin _headline-base() {
+  font-family: "Helvetica Neue LT GEO", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-align: left;
+}
+@mixin headline-1() {
+  @include _headline-base;
+  font-size: 40px;
+  line-height: 49px;
+}
+@mixin headline-2() {
+  @include _headline-base;
+  font-size: 32px;
+  line-height: 44px;
+}
+@mixin headline-3() {
+  @include _headline-base;
+  font-size: 24px;
+  line-height: 35px;
+}
+@mixin headline-4() {
+  @include _headline-base;
+  font-size: 20px;
+  line-height: 28px;
+}
+@mixin headline-5() {
+  @include _headline-base;
+  font-size: 18px;
+  line-height: 25px;
+}
+@mixin headline-6() {
+  @include _headline-base;
+  font-size: 16px;
+  line-height: 24px;
+}
+@mixin headline-7() {
+  @include _headline-base;
+  font-size: 14px;
+  line-height: 20px;
+}
+@mixin headline-8() {
+  @include _headline-base;
+  font-size: 12px;
+  line-height: 17px;
+}
+@mixin headline-9() {
+  @include _headline-base;
+  font-size: 10px;
+  line-height: 14px;
+}
+
+@mixin _subtitle-base() {
+  font-family: "Helvetica Neue LT GEO", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  text-align: left;
+}
+@mixin subtitle-1() {
+  @include _subtitle-base;
+  font-size: 40px;
+  line-height: 56px;
+}
+@mixin subtitle-2() {
+  @include _subtitle-base;
+  font-size: 32px;
+  line-height: 44px;
+}
+@mixin subtitle-3() {
+  @include _subtitle-base;
+  font-size: 24px;
+  line-height: 35px;
+}
+@mixin subtitle-4() {
+  @include _subtitle-base;
+  font-size: 20px;
+  line-height: 28px;
+}
+@mixin subtitle-5() {
+  @include _subtitle-base;
+  font-size: 18px;
+  line-height: 25px;
+}
+@mixin subtitle-6() {
+  @include _subtitle-base;
+  font-size: 16px;
+  line-height: 24px;
+}
+@mixin subtitle-7() {
+  @include _subtitle-base;
+  font-size: 14px;
+  line-height: 20px;
+}
+@mixin subtitle-8() {
+  @include _subtitle-base;
+  font-size: 12px;
+  line-height: 17px;
+}
+@mixin subtitle-9() {
+  @include _subtitle-base;
+  font-size: 10px;
+  line-height: 14px;
+}

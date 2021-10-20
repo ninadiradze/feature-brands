@@ -1,0 +1,15 @@
+version: '3'
+services:
+  psp_sf_app:
+    image: node
+    container_name: psp_sf_app
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/var/www
