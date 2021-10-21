@@ -1,5 +1,88 @@
 <template>
   <div id="home">
+    <div
+      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(3, 1fr); margin-top: 20px"
+    >
+      <Banner
+        color="green"
+        title="აფთიაქი"
+        subtitle="8500+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <Banner
+        color="yellow"
+        title="ოჯახზე ზრუნვა"
+        subtitle="960+ პროდუქცია"
+        image="/test/image2.png"
+      />
+      <Banner
+        color="pink"
+        title="სილამაზე"
+        subtitle="9000+ პროდუქცია"
+        image="/test/image3.png"
+      />
+    </div>
+    <SectionHeader
+      heading="ყველაზე პოპულარული"
+      show-see-more
+      :categories="['რუჯი და მზისგან დაცვა', 'მედიკამენტები', 'დედა და ბავშვი']"
+      icon="System/Star-Outline"
+      icon-background="yellow"
+      style="margin-top: 20px"
+    />
+    <ProductReel style="margin-top: 20px" />
+    <div
+      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
+    >
+      <Brand image="/homepage/apple.png" alt="Apple Logo" />
+    </div>
+    <Breadcrumbs
+      style="margin-top: 20px;"
+      :links="[
+        { label: 'მთავარი', url: '/' },
+        { label: 'დედა და ბავშვი', url: '/mother-and-child' },
+        { label: 'სათამაშოები', url: '/mother-and-child/toys' },
+      ]"
+    />
+    <div
+      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
+    >
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+    </div>
+    <div
+      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
+    >
+      <Offer
+        image="/homepage/bannerG.webp"
+        title="50% ფასდაკლება Sebamed-ის საბავშვო ხაზის ყველა პროდუქტზე"
+      />
+    </div>
+    <div
+      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
+    >
+      <Input
+        id="first_name"
+        label="First Name"
+        show-button
+        :button-label="buttonLabel"
+        :button-disabled="buttonDisabled"
+        icon="System/Check2"
+        @inputButtonClick="
+          buttonDisabled = true;
+          buttonLabel = 'Verified';
+        "
+      />
+      <Input
+        id="first_name"
+        label="First Name"
+        icon="System/Check2"
+        icon-position="right"
+      />
+    </div>
     <SfHero class="hero">
       <SfHeroItem
         v-for="(hero, i) in heroes"
@@ -13,14 +96,8 @@
       />
     </SfHero>
     <LazyHydrate when-visible>
-      <SfBannerGrid
-        :banner-grid="1"
-        class="banner-grid"
-      >
-        <template
-          v-for="item in banners"
-          #[item.slot]
-        >
+      <SfBannerGrid :banner-grid="1" class="banner-grid">
+        <template v-for="item in banners" #[item.slot]>
           <SfBanner
             :key="item.slot"
             :title="item.title"
@@ -66,24 +143,33 @@ import {
   SfCallToAction,
   SfBannerGrid,
 } from '@storefront-ui/vue';
-import {
-  useProduct,
-  useCart,
-  productGetters,
-} from '@vue-storefront/magento';
-import {
-  computed,
-  defineComponent,
-} from '@vue/composition-api';
+import { useProduct, useCart, productGetters } from '@vue-storefront/magento';
+import { computed, defineComponent } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import MobileStoreBanner from '~/components/MobileStoreBanner.vue';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import ProductsCarousel from '~/components/ProductsCarousel.vue';
+import SectionHeader from '../components/SectionHeader.vue';
+import Banner from '../components/Banner.vue';
+import ProductReel from '../components/ProductReel.vue';
+import Brand from '../components/Brand.vue';
+import Breadcrumbs from '../components/Base/Breadcrumbs.vue';
+import CategoryBox from '../components/Base/CategoryBox.vue';
+import Offer from '../components/Base/Offer.vue';
+import Input from '../components/Base/Input.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
+    Input,
+    Offer,
+    CategoryBox,
+    Breadcrumbs,
+    Brand,
+    ProductReel,
+    Banner,
+    SectionHeader,
     InstagramFeed,
     LazyHydrate,
     MobileStoreBanner,
@@ -101,15 +187,14 @@ export default defineComponent({
       loading: newProductsLoading,
     } = useProduct('newProducts');
 
-    const {
-      cart,
-      load: loadCart,
-      addItem: addToCart,
-      isInCart,
-    } = useCart();
+    const { cart, load: loadCart, addItem: addToCart, isInCart } = useCart();
 
     // @ts-ignore
-    const newProducts = computed(() => productGetters.getFiltered(newProductsResult.value?.items, { master: true }));
+    const newProducts = computed(() =>
+      productGetters.getFiltered(newProductsResult.value?.items, {
+        master: true,
+      }),
+    );
 
     onSSR(async () => {
       await newProductsSearch({
@@ -135,6 +220,8 @@ export default defineComponent({
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   data() {
     return {
+      buttonLabel: 'Verify',
+      buttonDisabled: false,
       heroes: [
         {
           title: 'Colorful summer dresses are already in store',
@@ -184,7 +271,7 @@ export default defineComponent({
           subtitle: 'Dresses',
           title: 'Cocktail & Party',
           description:
-            'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
+            "Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.",
           buttonText: 'Shop now',
           image: {
             mobile:
@@ -200,7 +287,7 @@ export default defineComponent({
           subtitle: 'Dresses',
           title: 'Linen Dresses',
           description:
-            'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
+            "Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.",
           buttonText: 'Shop now',
           image: {
             mobile:
@@ -262,7 +349,7 @@ export default defineComponent({
 
 .article-item__meta-item:not(:last-child)::after {
   display: inline-block;
-  content: "";
+  content: '';
   width: 5px;
   height: 5px;
   margin: -1px 10px 0 10px;
@@ -301,7 +388,8 @@ export default defineComponent({
         --hero-item-wrapper-text-align: right;
         --hero-item-subtitle-width: 100%;
         --hero-item-title-width: 100%;
-        --hero-item-wrapper-padding: var(--spacer-sm) var(--spacer-sm) var(--spacer-sm) var(--spacer-2xl);
+        --hero-item-wrapper-padding: var(--spacer-sm) var(--spacer-sm)
+          var(--spacer-sm) var(--spacer-2xl);
       }
     }
   }
