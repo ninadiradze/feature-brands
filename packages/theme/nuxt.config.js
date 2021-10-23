@@ -171,7 +171,7 @@ export default {
     },
   },
   styleResources: {
-    scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] })],
+    scss: ['@storefront-ui/shared/styles/_helpers.scss', '~/assets/styles.scss'],
   },
   build: {
     babel: {

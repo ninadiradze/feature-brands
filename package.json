@@ -84,5 +84,9 @@
   },
   "engines": {
     "node": ">=14.x"
+  },
+  "dependencies": {
+    "swiper": "6.0.0",
+    "vue-awesome-swiper": "^4.1.1"
   }
 }
