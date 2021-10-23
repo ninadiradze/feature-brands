@@ -1,5 +1,8 @@
 <template>
   <div id="home">
+    <hero-carousel
+      :slides="[{image: '/test/hero1.jpeg'}, {image: '/test/hero1.jpeg'}, {image: '/test/hero1.jpeg'}]"
+    />
     <div
       style="display: grid; grid-gap: 20px; grid-template-columns: repeat(3, 1fr); margin-top: 20px"
     >
@@ -31,6 +34,43 @@
       style="margin-top: 20px"
     />
     <ProductReel style="margin-top: 20px" />
+    <SectionHeader
+      heading="იზრუნე სილამაზეზე"
+      show-see-more
+      :categories="['რუჯი და მზისგან დაცვა', 'მედიკამენტები', 'დედა და ბავშვი']"
+      style="margin-top: 20px"
+    />
+    <ProductReel
+      color="green"
+      :slider-per-view="4"
+      image="/test/human1.png"
+      style="margin-top: 20px"
+    />
+    <SectionHeader
+      heading="იზრუნე სილამაზეზე"
+      show-see-more
+      :categories="['რუჯი და მზისგან დაცვა', 'მედიკამენტები', 'დედა და ბავშვი']"
+      style="margin-top: 20px"
+    />
+    <ProductReel
+      color="pink"
+      :slider-per-view="4"
+      :slides-per-column="2"
+      image="/test/human2.png"
+      style="margin-top: 20px"
+    />
+    <SectionHeader
+      heading="იზრუნე სილამაზეზე"
+      show-see-more
+      :categories="['რუჯი და მზისგან დაცვა', 'მედიკამენტები', 'დედა და ბავშვი']"
+      style="margin-top: 20px"
+    />
+    <ProductReel
+      color="yellow"
+      :slider-per-view="4"
+      image="/test/human3.png"
+      style="margin-top: 20px"
+    />
     <div
       style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
     >
@@ -158,6 +198,7 @@ import Breadcrumbs from '../components/Base/Breadcrumbs.vue';
 import CategoryBox from '../components/Base/CategoryBox.vue';
 import Offer from '../components/Base/Offer.vue';
 import Input from '../components/Base/Input.vue';
+import HeroCarousel from '../components/HeroCarousel';
 
 export default defineComponent({
   name: 'Home',
@@ -178,6 +219,7 @@ export default defineComponent({
     SfBannerGrid,
     SfCallToAction,
     SfHero,
+    HeroCarousel
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
@@ -362,7 +404,7 @@ export default defineComponent({
   box-sizing: border-box;
   padding: 0 var(--spacer-sm);
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 100%;
     padding: 0;
     margin: 0 auto;
   }
@@ -389,7 +431,7 @@ export default defineComponent({
         --hero-item-subtitle-width: 100%;
         --hero-item-title-width: 100%;
         --hero-item-wrapper-padding: var(--spacer-sm) var(--spacer-sm)
-          var(--spacer-sm) var(--spacer-2xl);
+                                         var(--spacer-sm) var(--spacer-2xl);
       }
     }
   }
