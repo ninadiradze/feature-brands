@@ -123,6 +123,91 @@
         icon-position="right"
       />
     </div>
+    <div
+      style="margin-top: 20px;"
+    >
+      <icon name="chevron-top" />
+      <icon name="chevron-down" />
+      <icon name="chevron-left" />
+      <icon name="chevron-right" />
+      <icon name="menu" />
+      <icon name="menu-outline" />
+      <icon name="menu-duotone" />
+      <icon name="user-outline" />
+      <icon name="user-duotone" />
+      <icon name="heart-outline" />
+      <icon name="heart-duotone" />
+      <icon name="bag-outline" />
+      <icon name="bag-duotone" />
+      <icon name="star-duotone" />
+      <icon name="star-outline" />
+      <icon name="star-full" />
+      <icon name="search-duotone" />
+      <icon name="search-outline" />
+      <icon name="lock-duotone" />
+      <icon name="lock-outline" />
+      <icon name="shield-duotone" />
+      <icon name="shield-outline" />
+      <icon name="eye-duotone" />
+      <icon name="eye-outline" />
+      <icon name="pin" />
+      <icon name="pin-full" />
+      <icon name="pin-secondary-outline" />
+      <icon name="pin-secondary-duotone" />
+      <icon name="check-circle-active" />
+      <icon name="check-circle-empty" />
+      <icon name="check-mark" />
+      <icon name="check-mark-circle" />
+      <icon name="check-mark-circle-active" />
+      <icon name="covid19" />
+      <icon name="basket-duotone" />
+      <icon name="basket-outline" />
+      <icon name="plus" />
+      <icon name="plus-circle" />
+      <icon name="plus-circle-duotone" />
+      <icon name="minus" />
+      <icon name="minus-circle" />
+      <icon name="minus-circle-duotone" />
+      <icon name="info" />
+      <icon name="info-fill" />
+      <icon name="info-duotone" />
+      <icon name="flash" />
+      <icon name="flash-fill" />
+      <icon name="flash-duotone" />
+      <icon name="timer" />
+      <icon name="cross" />
+      <icon name="cross-circle" />
+      <icon name="cross-fill" />
+      <icon name="maximize" />
+      <icon name="maximize-secondary" />
+      <icon name="direction" />
+      <icon name="sale" />
+      <icon name="sale-secondary" />
+      <icon name="share" />
+      <icon name="trash" />
+      <icon name="fire" />
+      <icon name="israel" />
+      <icon name="uk" />
+      <icon name="list" />
+      <icon name="grid" />
+      <icon name="save" />
+      <icon name="smile" />
+      <icon name="print" />
+      <icon name="alert" />
+      <icon name="edit" />
+      <icon name="facebook" />
+      <icon name="google" />
+      <icon name="phone" />
+      <icon name="email" />
+      <icon name="credit-card" />
+      <icon name="logout" />
+      <icon name="verified" />
+      <icon name="unverified" />
+      <icon name="more" />
+      <icon name="replay" />
+      <icon name="filter" />
+      <icon name="sort" />
+    </div>
     <SfHero class="hero">
       <SfHeroItem
         v-for="(hero, i) in heroes"
@@ -199,6 +284,7 @@ import CategoryBox from '../components/Base/CategoryBox.vue';
 import Offer from '../components/Base/Offer.vue';
 import Input from '../components/Base/Input.vue';
 import HeroCarousel from '../components/HeroCarousel';
+import Icon from '../components/Icon';
 
 export default defineComponent({
   name: 'Home',
@@ -219,7 +305,8 @@ export default defineComponent({
     SfBannerGrid,
     SfCallToAction,
     SfHero,
-    HeroCarousel
+    HeroCarousel,
+    Icon,
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
