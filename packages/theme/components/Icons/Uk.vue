@@ -1,0 +1,17 @@
+<template>
+  <fragment>
+    <rect x="2.79065" y="5.02332" width="18.9767" height="13.3953" rx="2" fill="white"/>
+    <mask id="mask0" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="5" width="20" height="14">
+      <rect x="2.79065" y="5.02332" width="18.9767" height="13.3953" rx="2" fill="white"/>
+    </mask>
+    <g mask="url(#mask0)">
+      <rect x="2.79065" y="5.02332" width="18.9767" height="13.3953" fill="#0A17A7"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M7.31378 13.9535L0.910889 18.2215L1.92152 19.7022L10.0198 14.3041V19.3117H14.5381V14.3039L22.6367 19.7022L23.6473 18.2215L17.2445 13.9535H21.7673V9.48843H17.2444L23.6473 5.22045L22.6366 3.73975L14.5381 9.13801V4.13029H10.0198V9.1378L1.92161 3.73975L0.910972 5.22045L7.31384 9.48843H2.79059V13.9535H7.31378Z" fill="white"/>
+      <path d="M15.4429 9.26435L24.0267 3.68372" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/>
+      <path d="M16.3542 14.1975L24.0492 19.3231" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/>
+      <path d="M8.21644 9.24989L0.189941 3.90417" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/>
+      <path d="M9.087 14.1355L0.189941 19.9662" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M2.79065 13.0605H10.9235V18.4187H13.6345V13.0605H21.7674V10.3815H13.6345V5.02332H10.9235V10.3815H2.79065V13.0605Z" fill="#E6273E"/>
+    </g>
+  </fragment>
+</template>

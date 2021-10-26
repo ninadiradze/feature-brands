@@ -71,6 +71,10 @@ export default {
       src: '~/plugins/domPurify.js',
       ssr: false,
     },
+    {
+      src: '~/plugins/fragment.js',
+      ssr: false,
+    },
   ],
   buildModules: [
     // to core
