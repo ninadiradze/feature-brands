@@ -87,25 +87,30 @@ export default {
     @include subtitle-6;
     padding: 0.75rem 1.25rem;
     border-radius: 4.375rem;
+    height: toRem(44);
     &#{$btn}--icon {
+      width: toRem(44);
       padding: 0.75rem;
     }
   }
   &--md {
     @include subtitle-7;
-    padding: 0.625rem 1.25rem;
+    padding: 0.5rem 1rem;
     border-radius: 4.375rem;
+    height: toRem(40);
     &#{$btn}--icon {
-      padding: 0.625rem;
+      width: toRem(40);
+      padding: 0.5rem;
     }
   }
   &--sm {
     @include subtitle-8;
     padding: 0.5rem 0.75rem;
     border-radius: 4.375rem;
-    height: 32px;
+    height: toRem(32);
     &#{$btn}--icon {
-      padding: 0.5rem;
+      width: toRem(32);
+      padding: toRem(6);
     }
   }
 

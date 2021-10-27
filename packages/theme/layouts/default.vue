@@ -1,14 +1,11 @@
 <template>
   <div>
-    <LazyHydrate when-visible>
-      <TopBar class="desktop-only" />
-    </LazyHydrate>
     <LazyHydrate when-idle>
       <AppHeader />
     </LazyHydrate>
 
-    <div id="layout">
-      <nuxt :key="$route.fullPath"/>
+    <div class="container">
+      <nuxt :key="$route.fullPath" />
 
       <LazyHydrate when-visible>
         <BottomNavigation />
@@ -25,14 +22,13 @@
 </template>
 
 <script>
-import AppHeader from '~/components/AppHeader.vue';
+import LazyHydrate from 'vue-lazy-hydration';
+import AppHeader from '../components/AppHeader.vue';
 import BottomNavigation from '~/components/BottomNavigation.vue';
 import AppFooter from '~/components/AppFooter.vue';
-import TopBar from '~/components/TopBar.vue';
 import CartSidebar from '~/components/CartSidebar.vue';
 import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
-import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
 
 export default {
@@ -40,20 +36,19 @@ export default {
 
   components: {
     LazyHydrate,
-    TopBar,
     AppHeader,
     BottomNavigation,
     AppFooter,
     CartSidebar,
     WishlistSidebar,
     LoginModal,
-    Notification
-  }
+    Notification,
+  },
 };
 </script>
 
 <style lang="scss">
-@import "~@storefront-ui/vue/styles";
+@import '~@storefront-ui/vue/styles';
 
 #layout {
   box-sizing: border-box;

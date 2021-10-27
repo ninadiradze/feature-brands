@@ -1,19 +1,9 @@
 <template>
   <div class="input input--md" :class="classes">
-    <input :id="id" type="text" placeholder=" " />
+    <input :id="id" type="text" :placeholder="placeholder" />
     <label :for="id">
       {{ label }}
     </label>
-    <Button
-      v-if="showButton"
-      :disabled="buttonDisabled"
-      type="bordered"
-      size="sm"
-      class="input__btn"
-      @click="$emit('inputButtonClick', $event)"
-    >
-      {{ buttonLabel }}
-    </Button>
     <img
       v-if="icon"
       :src="iconUri"
@@ -25,30 +15,15 @@
 </template>
 
 <script>
-import Button from './Button.vue';
-
 export default {
-  components: { Button },
   props: {
     id: {
       type: String,
       required: true,
     },
-    label: {
+    placeholder: {
       type: String,
       required: true,
-    },
-    showButton: {
-      type: Boolean,
-      default: false,
-    },
-    buttonLabel: {
-      type: String,
-      default: '',
-    },
-    buttonDisabled: {
-      type: Boolean,
-      default: false,
     },
     icon: {
       type: [String, null],
@@ -82,7 +57,7 @@ export default {
 
   &--md {
     input {
-      padding: 0.875rem 1rem;
+      padding: 0 toRem(12);
       box-sizing: border-box;
     }
   }
@@ -91,13 +66,10 @@ export default {
     input {
       padding-left: 2.75rem;
     }
-    label {
-      left: calc(2.75rem + 1px) !important;
-    }
 
     #{$input}__icon--left {
       position: absolute;
-      left: calc(1rem + 1px);
+      left: toRem(12);
       top: 50%;
       transform: translateY(-50%);
     }
@@ -116,28 +88,14 @@ export default {
     }
   }
 
-  &__icon {
-    width: 16px;
-    height: 16px;
-  }
-
   input {
     color: $gray-regular;
     width: 100%;
-    height: 48px;
-    background-color: $gray-light-1;
+    height: toRem(40);
     border: solid 1px $border-regular;
-    border-radius: 0.5rem;
+    border-radius: toRem(68);
     transition: all $transition-duration / 2 ease-in-out;
-
-    &:not(:placeholder-shown) {
-      padding-top: 1.75rem;
-
-      + label {
-        font-size: 10px;
-        transform: translateY(-20%);
-      }
-    }
+    box-shadow: 0 1px 2px 0 #646d8c14;
 
     &:focus {
       background-color: $white;
@@ -145,25 +103,6 @@ export default {
       outline: none;
       color: $text-black;
     }
-  }
-
-  label {
-    position: absolute;
-    top: 0;
-    left: calc(1rem + 1px);
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    color: $gray-regular;
-    font-size: 0.825rem;
-    cursor: text;
-    transition: all $transition-duration ease-in-out;
-  }
-
-  &__btn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.625rem;
   }
 }
 </style>
