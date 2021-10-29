@@ -28,6 +28,10 @@ export default {
       type: String,
       default: 'filled',
     },
+    variant: {
+      type: String,
+      default: 'primary',
+    },
     icon: {
       type: [String, null],
       default: null,
@@ -43,7 +47,7 @@ export default {
   },
   computed: {
     classes() {
-      return `btn--${this.size} btn--${this.type} ${
+      return `btn--${this.size} btn--${this.variant} btn--${this.type}  ${
         this.iconOnly ? 'btn--icon' : ''
       }`;
     },
@@ -72,8 +76,23 @@ export default {
   }
 
   &--filled {
-    background-color: $blue-regular;
-    color: $text-white;
+    &.btn--primary {
+      background-color: $blue-regular;
+      color: $text-white;
+
+      &:hover {
+        background-color: $blue-dark;
+      }
+    }
+
+    &.btn--secondary {
+      background-color: $green-regular;
+      color: $text-white;
+
+      &:hover {
+        background-color: $green-dark;
+      }
+    }
   }
   &--bordered {
     border: solid 1px $border-regular;

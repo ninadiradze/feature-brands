@@ -44,6 +44,7 @@
       color="green"
       :slider-per-view="4"
       image="/test/human1.png"
+      :has-fade="false"
       style="margin-top: 20px"
     />
     <SectionHeader
@@ -57,6 +58,7 @@
       :slider-per-view="4"
       :slides-per-column="2"
       image="/test/human2.png"
+      :has-fade="false"
       style="margin-top: 20px"
     />
     <SectionHeader
@@ -69,6 +71,7 @@
       color="yellow"
       :slider-per-view="4"
       image="/test/human3.png"
+      :has-fade="false"
       style="margin-top: 20px"
     />
     <div
