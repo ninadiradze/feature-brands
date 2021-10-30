@@ -16,6 +16,9 @@
       <Notification />
     </div>
     <LazyHydrate when-visible>
+      <FooterFeatures />
+    </LazyHydrate>
+    <LazyHydrate when-visible>
       <AppFooter />
     </LazyHydrate>
   </div>
@@ -30,11 +33,13 @@ import CartSidebar from '~/components/CartSidebar.vue';
 import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
 import Notification from '~/components/Notification';
+import FooterFeatures from '../components/FooterFeatures';
 
 export default {
   name: 'DefaultLayout',
 
   components: {
+    FooterFeatures,
     LazyHydrate,
     AppHeader,
     BottomNavigation,

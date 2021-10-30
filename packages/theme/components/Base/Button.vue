@@ -75,6 +75,10 @@ export default {
     background-color: $blue-regular;
     color: $text-white;
   }
+  &--filled-inverted {
+    background-color: $blue-light-2;
+    color: $text-blue;
+  }
   &--bordered {
     border: solid 1px $border-regular;
     color: $text-blue;
@@ -83,6 +87,7 @@ export default {
   &--tertiary {
     color: $text-blue;
   }
+
   &--lg {
     @include subtitle-6;
     padding: 0.75rem 1.25rem;

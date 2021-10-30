@@ -1,7 +1,11 @@
 <template>
   <div id="home">
     <hero-carousel
-      :slides="[{image: '/test/hero1.jpeg'}, {image: '/test/hero1.jpeg'}, {image: '/test/hero1.jpeg'}]"
+      :slides="[
+        { image: '/test/hero1.jpeg' },
+        { image: '/test/hero1.jpeg' },
+        { image: '/test/hero1.jpeg' },
+      ]"
     />
     <div
       style="display: grid; grid-gap: 20px; grid-template-columns: repeat(3, 1fr); margin-top: 20px"
@@ -72,7 +76,7 @@
       style="margin-top: 20px"
     />
     <div
-      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
+      style="displayØ: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
     >
       <Brand image="/homepage/apple.png" alt="Apple Logo" />
     </div>
@@ -101,79 +105,6 @@
         title="50% ფასდაკლება Sebamed-ის საბავშვო ხაზის ყველა პროდუქტზე"
       />
     </div>
-    <div
-      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
-    >
-      <Input
-        id="first_name"
-        label="First Name"
-        show-button
-        :button-label="buttonLabel"
-        :button-disabled="buttonDisabled"
-        icon="System/Check2"
-        @inputButtonClick="
-          buttonDisabled = true;
-          buttonLabel = 'Verified';
-        "
-      />
-      <Input
-        id="first_name"
-        label="First Name"
-        icon="System/Check2"
-        icon-position="right"
-      />
-    </div>
-    <SfHero class="hero">
-      <SfHeroItem
-        v-for="(hero, i) in heroes"
-        :key="i"
-        :title="hero.title"
-        :subtitle="hero.subtitle"
-        :button-text="hero.buttonText"
-        :background="hero.background"
-        :image="hero.image"
-        :class="hero.className"
-      />
-    </SfHero>
-    <LazyHydrate when-visible>
-      <SfBannerGrid :banner-grid="1" class="banner-grid">
-        <template v-for="item in banners" #[item.slot]>
-          <SfBanner
-            :key="item.slot"
-            :title="item.title"
-            :subtitle="item.subtitle"
-            :description="item.description"
-            :button-text="item.buttonText"
-            :image="item.image"
-            :class="item.class"
-          />
-        </template>
-      </SfBannerGrid>
-    </LazyHydrate>
-    <LazyHydrate when-visible>
-      <ProductsCarousel
-        :products="newProducts"
-        :loading="newProductsLoading"
-        title="New Products"
-      />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <SfCallToAction
-        title="Subscribe to Newsletters"
-        button-text="Subscribe"
-        description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-        image="https://cdn.shopify.com/s/files/1/0407/1902/4288/files/newsletter_1240x202.jpg?v=1616496568"
-        class="call-to-action"
-      />
-    </LazyHydrate>
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <MobileStoreBanner />
-    </LazyHydrate>
   </div>
 </template>
 <script lang="ts" type="module">
@@ -219,7 +150,7 @@ export default defineComponent({
     SfBannerGrid,
     SfCallToAction,
     SfHero,
-    HeroCarousel
+    HeroCarousel,
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
@@ -431,7 +362,7 @@ export default defineComponent({
         --hero-item-subtitle-width: 100%;
         --hero-item-title-width: 100%;
         --hero-item-wrapper-padding: var(--spacer-sm) var(--spacer-sm)
-                                         var(--spacer-sm) var(--spacer-2xl);
+          var(--spacer-sm) var(--spacer-2xl);
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <nav class="navigation">
+  <nav class="navigation" :class="{ 'navigation--nowrap': !wrapItems }">
     <Component
       :is="getComponent(item)"
       v-for="(item, key) in items"
@@ -7,6 +7,7 @@
       class="navigation__item navigation-item"
       :class="getClasses(item)"
       :link="item.uri"
+      @click="item.event ? $emit(item.event) : false"
     >
       <img
         v-if="item.icon"
@@ -35,6 +36,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    wrapItems: {
+      type: Boolean,
+      default: true,
+    },
   },
   methods: {
     getComponent(item) {
@@ -55,17 +60,22 @@ export default {
 @import '~/assets/styles'; // TODO: remove
 
 .navigation {
-  display: flex;
-  align-items: center;
+  height: 40px;
+  overflow: hidden;
+
+  &--nowrap {
+    white-space: nowrap;
+  }
 }
 
 .navigation-item {
   text-decoration: none;
   padding: 0.5rem 1rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   cursor: pointer;
   white-space: nowrap;
+  vertical-align: middle;
 
   &--divider {
     cursor: default;
