@@ -8,6 +8,7 @@
         {{ heading }}
       </div>
       <Button
+        v-if="showSeeMore"
         type="tertiary"
         class="section-header__see-more"
         icon="System/Chevron-Right"

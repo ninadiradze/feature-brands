@@ -1,7 +1,11 @@
 <template>
   <div id="home">
     <hero-carousel
-      :slides="[{image: '/test/hero1.jpeg'}, {image: '/test/hero1.jpeg'}, {image: '/test/hero1.jpeg'}]"
+      :slides="[
+        { image: '/test/hero1.jpeg' },
+        { image: '/test/hero1.jpeg' },
+        { image: '/test/hero1.jpeg' },
+      ]"
     />
     <div
       style="display: grid; grid-gap: 20px; grid-template-columns: repeat(3, 1fr); margin-top: 20px"
@@ -72,7 +76,7 @@
       style="margin-top: 20px"
     />
     <div
-      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
+      style="displayØ: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
     >
       <Brand image="/homepage/apple.png" alt="Apple Logo" />
     </div>
@@ -101,164 +105,6 @@
         title="50% ფასდაკლება Sebamed-ის საბავშვო ხაზის ყველა პროდუქტზე"
       />
     </div>
-    <div
-      style="display: grid; grid-gap: 20px; grid-template-columns: repeat(4, 1fr); margin-top: 20px;"
-    >
-      <Input
-        id="first_name"
-        label="First Name"
-        show-button
-        :button-label="buttonLabel"
-        :button-disabled="buttonDisabled"
-        icon="System/Check2"
-        @inputButtonClick="
-          buttonDisabled = true;
-          buttonLabel = 'Verified';
-        "
-      />
-      <Input
-        id="first_name"
-        label="First Name"
-        icon="System/Check2"
-        icon-position="right"
-      />
-    </div>
-    <div
-      style="margin-top: 20px;"
-    >
-      <icon name="chevron-top" />
-      <icon name="chevron-down" />
-      <icon name="chevron-left" />
-      <icon name="chevron-right" />
-      <icon name="menu" />
-      <icon name="menu-outline" />
-      <icon name="menu-duotone" />
-      <icon name="user-outline" />
-      <icon name="user-duotone" />
-      <icon name="heart-outline" />
-      <icon name="heart-duotone" />
-      <icon name="bag-outline" />
-      <icon name="bag-duotone" />
-      <icon name="star-duotone" />
-      <icon name="star-outline" />
-      <icon name="star-full" />
-      <icon name="search-duotone" />
-      <icon name="search-outline" />
-      <icon name="lock-duotone" />
-      <icon name="lock-outline" />
-      <icon name="shield-duotone" />
-      <icon name="shield-outline" />
-      <icon name="eye-duotone" />
-      <icon name="eye-outline" />
-      <icon name="pin" />
-      <icon name="pin-full" />
-      <icon name="pin-secondary-outline" />
-      <icon name="pin-secondary-duotone" />
-      <icon name="check-circle-active" />
-      <icon name="check-circle-empty" />
-      <icon name="check-mark" />
-      <icon name="check-mark-circle" />
-      <icon name="check-mark-circle-active" />
-      <icon name="covid19" />
-      <icon name="basket-duotone" />
-      <icon name="basket-outline" />
-      <icon name="plus" />
-      <icon name="plus-circle" />
-      <icon name="plus-circle-duotone" />
-      <icon name="minus" />
-      <icon name="minus-circle" />
-      <icon name="minus-circle-duotone" />
-      <icon name="info" />
-      <icon name="info-fill" />
-      <icon name="info-duotone" />
-      <icon name="flash" />
-      <icon name="flash-fill" />
-      <icon name="flash-duotone" />
-      <icon name="timer" />
-      <icon name="cross" />
-      <icon name="cross-circle" />
-      <icon name="cross-fill" />
-      <icon name="maximize" />
-      <icon name="maximize-secondary" />
-      <icon name="direction" />
-      <icon name="sale" />
-      <icon name="sale-secondary" />
-      <icon name="share" />
-      <icon name="trash" />
-      <icon name="fire" />
-      <icon name="israel" />
-      <icon name="uk" />
-      <icon name="list" />
-      <icon name="grid" />
-      <icon name="save" />
-      <icon name="smile" />
-      <icon name="print" />
-      <icon name="alert" />
-      <icon name="edit" />
-      <icon name="facebook" />
-      <icon name="google" />
-      <icon name="phone" />
-      <icon name="email" />
-      <icon name="credit-card" />
-      <icon name="logout" />
-      <icon name="verified" />
-      <icon name="unverified" />
-      <icon name="more" />
-      <icon name="replay" />
-      <icon name="filter" />
-      <icon name="sort" />
-    </div>
-    <SfHero class="hero">
-      <SfHeroItem
-        v-for="(hero, i) in heroes"
-        :key="i"
-        :title="hero.title"
-        :subtitle="hero.subtitle"
-        :button-text="hero.buttonText"
-        :background="hero.background"
-        :image="hero.image"
-        :class="hero.className"
-      />
-    </SfHero>
-    <LazyHydrate when-visible>
-      <SfBannerGrid :banner-grid="1" class="banner-grid">
-        <template v-for="item in banners" #[item.slot]>
-          <SfBanner
-            :key="item.slot"
-            :title="item.title"
-            :subtitle="item.subtitle"
-            :description="item.description"
-            :button-text="item.buttonText"
-            :image="item.image"
-            :class="item.class"
-          />
-        </template>
-      </SfBannerGrid>
-    </LazyHydrate>
-    <LazyHydrate when-visible>
-      <ProductsCarousel
-        :products="newProducts"
-        :loading="newProductsLoading"
-        title="New Products"
-      />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <SfCallToAction
-        title="Subscribe to Newsletters"
-        button-text="Subscribe"
-        description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-        image="https://cdn.shopify.com/s/files/1/0407/1902/4288/files/newsletter_1240x202.jpg?v=1616496568"
-        class="call-to-action"
-      />
-    </LazyHydrate>
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <MobileStoreBanner />
-    </LazyHydrate>
   </div>
 </template>
 <script lang="ts" type="module">
@@ -284,7 +130,6 @@ import CategoryBox from '../components/Base/CategoryBox.vue';
 import Offer from '../components/Base/Offer.vue';
 import Input from '../components/Base/Input.vue';
 import HeroCarousel from '../components/HeroCarousel';
-import Icon from '../components/Icon';
 
 export default defineComponent({
   name: 'Home',
@@ -306,7 +151,6 @@ export default defineComponent({
     SfCallToAction,
     SfHero,
     HeroCarousel,
-    Icon,
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
@@ -518,7 +362,7 @@ export default defineComponent({
         --hero-item-subtitle-width: 100%;
         --hero-item-title-width: 100%;
         --hero-item-wrapper-padding: var(--spacer-sm) var(--spacer-sm)
-                                         var(--spacer-sm) var(--spacer-2xl);
+          var(--spacer-sm) var(--spacer-2xl);
       }
     }
   }

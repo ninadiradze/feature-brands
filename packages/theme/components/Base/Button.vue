@@ -28,6 +28,10 @@ export default {
       type: String,
       default: 'filled',
     },
+    variant: {
+      type: String,
+      default: 'primary',
+    },
     icon: {
       type: [String, null],
       default: null,
@@ -43,7 +47,7 @@ export default {
   },
   computed: {
     classes() {
-      return `btn--${this.size} btn--${this.type} ${
+      return `btn--${this.size} btn--${this.variant} btn--${this.type}  ${
         this.iconOnly ? 'btn--icon' : ''
       }`;
     },
@@ -72,8 +76,27 @@ export default {
   }
 
   &--filled {
-    background-color: $blue-regular;
-    color: $text-white;
+    &.btn--primary {
+      background-color: $blue-regular;
+      color: $text-white;
+
+      &:hover {
+        background-color: $blue-dark;
+      }
+    }
+
+    &.btn--secondary {
+      background-color: $green-regular;
+      color: $text-white;
+
+      &:hover {
+        background-color: $green-dark;
+      }
+    }
+  }
+  &--filled-inverted {
+    background-color: $blue-light-2;
+    color: $text-blue;
   }
   &--bordered {
     border: solid 1px $border-regular;
@@ -83,29 +106,35 @@ export default {
   &--tertiary {
     color: $text-blue;
   }
+
   &--lg {
     @include subtitle-6;
     padding: 0.75rem 1.25rem;
     border-radius: 4.375rem;
+    height: toRem(44);
     &#{$btn}--icon {
+      width: toRem(44);
       padding: 0.75rem;
     }
   }
   &--md {
     @include subtitle-7;
-    padding: 0.625rem 1.25rem;
+    padding: 0.5rem 1rem;
     border-radius: 4.375rem;
+    height: toRem(40);
     &#{$btn}--icon {
-      padding: 0.625rem;
+      width: toRem(40);
+      padding: 0.5rem;
     }
   }
   &--sm {
     @include subtitle-8;
     padding: 0.5rem 0.75rem;
     border-radius: 4.375rem;
-    height: 32px;
+    height: toRem(32);
     &#{$btn}--icon {
-      padding: 0.5rem;
+      width: toRem(32);
+      padding: toRem(6);
     }
   }
 

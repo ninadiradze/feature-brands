@@ -1,343 +1,221 @@
 <template>
   <div>
-    <SfHeader
-      class="sf-header--has-mobile-search"
-      :class="{'header-on-top': isSearchOpen}"
-    >
-      <!-- TODO: add mobile view buttons after SFUI team PR -->
-      <template #logo>
-        <nuxt-link
-          :to="localePath('/')"
-          class="sf-header__logo"
-        >
-          <SfImage
-            src="/icons/logo.svg"
-            alt="Vue Storefront Next"
-            class="sf-header__logo-image"
-          />
-        </nuxt-link>
-      </template>
-      <template #navigation>
-        <SfHeaderNavigationItem
-          v-for="(category, index) in categoryTree"
-          :key="index"
-          v-e2e="'app-header-url_women'"
-          class="nav-item"
-          :label="category.label"
-          :link="localePath(getAgnosticCatLink(category))"
-        />
-      </template>
-      <template #aside>
-        <LocaleSelector class="smartphone-only" />
-      </template>
-      <template #header-icons>
-        <div class="sf-header__icons">
-          <SfButton
-            v-e2e="'app-header-account'"
-            class="sf-button--pure sf-header__action"
-            @click="handleAccountClick"
-          >
-            <SfIcon
-              :icon="accountIcon"
-              size="1.25rem"
-            />
-          </SfButton>
-          <SfButton
-            class="sf-button--pure sf-header__action"
-            @click="toggleWishlistSidebar"
-          >
-            <SfIcon
-              class="sf-header__icon"
-              icon="heart"
-              size="1.25rem"
-            />
-          </SfButton>
-          <SfButton
-            v-e2e="'app-header-cart'"
-            class="sf-button--pure sf-header__action"
-            @click="toggleCartSidebar"
-          >
-            <SfIcon
-              class="sf-header__icon"
-              icon="empty_cart"
-              size="1.25rem"
-            />
-            <SfBadge
-              v-if="cartTotalItems"
-              class="sf-badge--number cart-badge"
-            >
-              {{ cartTotalItems }}
-            </SfBadge>
-          </SfButton>
+    <header class="header">
+      <div class="container">
+        <div class="header__inner">
+          <div class="header__logo">
+            <img src="/Logo.png" alt="PSP logo" />
+          </div>
+          <div class="header__grid">
+            <div class="header__row">
+              <div class="header__col">
+                <div class="header__search">
+                  <SearchInput
+                    id="header-search"
+                    placeholder="ძიება"
+                    icon="System/Search-Outline"
+                  />
+                </div>
+              </div>
+              <div class="header__col">
+                <div class="header__buttons">
+                  <Button type="bordered" icon-only icon="Flag/UK" />
+                  <Button
+                    type="bordered"
+                    icon-only
+                    icon="System/Heart-Outline"
+                  />
+                  <Button
+                    type="bordered"
+                    icon-only
+                    icon="System/User-Outline"
+                  />
+                  <Button type="filled-inverted" icon="System/Basket-Outline">
+                    კალათა
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div class="header__row">
+              <div class="header__col">
+                <div class="header__nav header__nav--primary">
+                  <Navigation
+                    :items="navigationPrimary"
+                    @openMenu="onOpenMenu"
+                  />
+                </div>
+              </div>
+              <div class="header__col">
+                <div class="header__nav header__nav--secondary">
+                  <Navigation
+                    :items="navigationSecondary"
+                    :wrap-items="false"
+                    @openCitySelector="onOpenCitySelector"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </template>
-      <template #search>
-        <SfSearchBar
-          ref="searchBarRef"
-          v-click-outside="closeSearch"
-          :placeholder="$t('Search for items')"
-          aria-label="Search"
-          class="sf-header__search"
-          :value="term"
-          @input="handleSearch"
-          @keydown.enter="handleSearch($event)"
-          @focus="isSearchOpen = true"
-          @keydown.esc="closeSearch"
-        >
-          <template #icon>
-            <SfButton
-              v-if="!!term"
-              class="sf-search-bar__button sf-button--pure"
-              @click="closeOrFocusSearchBar"
-            >
-              <span class="sf-search-bar__icon">
-                <SfIcon
-                  color="var(--c-text)"
-                  size="18px"
-                  icon="cross"
-                />
-              </span>
-            </SfButton>
-            <SfButton
-              v-else
-              class="sf-search-bar__button sf-button--pure"
-              @click="isSearchOpen ? isSearchOpen = false : isSearchOpen = true"
-            >
-              <span class="sf-search-bar__icon">
-                <SfIcon
-                  color="var(--c-text)"
-                  size="20px"
-                  icon="search"
-                />
-              </span>
-            </SfButton>
-          </template>
-        </SfSearchBar>
-      </template>
-    </SfHeader>
-    <SearchResults
-      :visible="isSearchOpen"
-      :result="result"
-      @close="closeSearch"
-      @removeSearchResults="removeSearchResults"
-    />
-    <SfOverlay :visible="isSearchOpen" />
+      </div>
+    </header>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  SfHeader,
-  SfImage,
-  SfIcon,
-  SfButton,
-  SfBadge,
-  SfSearchBar,
-  SfOverlay,
-} from '@storefront-ui/vue';
-import {
-  cartGetters,
-  categoryGetters,
-  useCart,
-  useCategory,
-  useCategorySearch,
-  useFacet,
-  useUser,
-  useWishlist,
-} from '@vue-storefront/magento';
-import {
-  computed,
-  ref,
-  onBeforeUnmount,
-  watch,
-  defineComponent,
-} from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
+import { defineComponent } from '@vue/composition-api';
 import { clickOutside } from '@storefront-ui/vue/src/utilities/directives/click-outside/click-outside-directive.js';
-import {
-  mapMobileObserver,
-  unMapMobileObserver,
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
-import debounce from 'lodash.debounce';
-import {
-  useUiHelpers,
-  useUiState,
-} from '~/composables';
-import { useVueRouter } from '~/helpers/hooks/useVueRouter';
-import LocaleSelector from '~/components/LocaleSelector.vue';
-import SearchResults from '~/components/SearchResults.vue';
+import Button from './Base/Button.vue';
+import SearchInput from './Base/SearchInput.vue';
+import Navigation from './Base/Navigation.vue';
 
 export default defineComponent({
-  components: {
-    SfHeader,
-    SfImage,
-    LocaleSelector,
-    SfIcon,
-    SfButton,
-    SfBadge,
-    SfSearchBar,
-    SearchResults,
-    SfOverlay,
-  },
+  components: { Navigation, SearchInput, Button },
   directives: { clickOutside },
-  setup() {
-    const { router } = useVueRouter();
-    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal } = useUiState();
-    const { setTermForUrl, getFacetsFromURL, getAgnosticCatLink } = useUiHelpers();
-    const { isAuthenticated, load: loadUser } = useUser();
-    const { cart, load: loadCart } = useCart();
-    const { load: loadWishlist } = useWishlist();
-    const {
-      result: searchResult,
-      search: productsSearch,
-      // loading: productsLoading,
-    } = useFacet('AppHeader:Products');
-    const {
-      result: categories,
-      search: categoriesSearch,
-    } = useCategorySearch('AppHeader:Categories');
-    const {
-      categories: categoryList,
-      search: categoriesListSearch,
-    } = useCategory('AppHeader:CategoryList');
-
-    const term = ref(getFacetsFromURL().term);
-    const isSearchOpen = ref(false);
-    const searchBarRef = ref(null);
-    const result = ref(null);
-
-    const cartTotalItems = computed(() => {
-      const count = cartGetters.getTotalItems(cart.value);
-      return count ? count.toString() : null;
-    });
-
-    const accountIcon = computed(() => (isAuthenticated.value ? 'profile_fill' : 'profile'));
-
-    const categoryTree = computed(() => categoryGetters.getCategoryTree(categoryList.value?.[0])?.items.filter((c) => c.count > 0));
-
-    const handleAccountClick = async () => {
-      if (isAuthenticated.value) {
-        await router.push('/my-account');
-      } else {
-        toggleLoginModal();
-      }
-    };
-
-    onSSR(async () => {
-      await Promise.all([
-        loadUser(),
-        loadCart(),
-        loadWishlist(),
-        categoriesListSearch({
-          pageSize: 100,
-        }),
-      ]);
-    });
-
-    const closeSearch = () => {
-      if (!isSearchOpen.value) return;
-
-      term.value = '';
-      isSearchOpen.value = false;
-    };
-
-    const handleSearch = debounce(async (paramValue) => {
-      term.value = !paramValue.target ? paramValue : paramValue.target.value;
-
-      await Promise.all([
-        productsSearch({
-          itemsPerPage: 12,
-          term: term.value as string,
-        }),
-        categoriesSearch({
-          term: term.value as string,
-        }),
-      ]);
-
-      result.value = {
-        products: searchResult.value?.data?.items,
-        categories: categories.value
-          .map((element) => categoryGetters.getCategoryTree(element)),
-      };
-    }, 1000);
-
-    const isMobile = computed(() => mapMobileObserver().isMobile.get());
-
-    const closeOrFocusSearchBar = () => {
-      if (isMobile.value) {
-        return closeSearch();
-      }
-      term.value = '';
-      return searchBarRef.value.$el.children[0].focus();
-    };
-
-    watch(() => term.value, (newVal, oldVal) => {
-      const shouldSearchBeOpened = (!isMobile.value && term.value.length > 0)
-        && ((!oldVal && newVal)
-          || (newVal.length !== oldVal.length
-            && isSearchOpen.value === false));
-
-      if (shouldSearchBeOpened) isSearchOpen.value = true;
-    });
-
-    const removeSearchResults = () => {
-      result.value = null;
-    };
-
-    onBeforeUnmount(() => {
-      unMapMobileObserver();
-    });
-
+  data() {
     return {
-      accountIcon,
-      cartTotalItems,
-      categoryTree,
-      closeOrFocusSearchBar,
-      closeSearch,
-      getAgnosticCatLink,
-      handleAccountClick,
-      handleSearch,
-      isMobile,
-      isSearchOpen,
-      removeSearchResults,
-      result,
-      searchBarRef,
-      setTermForUrl,
-      term,
-      toggleCartSidebar,
-      toggleWishlistSidebar,
+      navigationPrimary: [
+        {
+          label: 'კატეგორიები',
+          icon: 'System/Menu-Outline',
+          iconRight: 'System/Chevron-Down',
+          style: 'primary',
+          event: 'openMenu',
+        },
+        {
+          divider: true,
+        },
+        {
+          label: 'მედიკამენტები',
+          uri: 'http://localhost:3000/medikamentebi',
+        },
+        {
+          label: 'კოსმეტიკა',
+          uri: 'http://localhost:3000/kosmetika',
+        },
+        {
+          label: 'დედა & ბავშვი',
+          uri: 'http://localhost:3000/deda-da-bavshvi',
+        },
+        {
+          label: 'COVID19',
+          uri: 'http://localhost:3000/deda-da-bavshvi',
+          icon: 'Category/COVID19',
+          style: 'pink',
+        },
+      ],
+      navigationSecondary: [
+        {
+          label: 'ოჯახის ბარათი',
+          uri: 'http://localhost:3000/deda-da-bavshvi',
+          style: 'secondary',
+        },
+        {
+          label: 'ვაკანსიები',
+          uri: 'http://localhost:3000/medikamentebi',
+          style: 'secondary',
+        },
+        {
+          divider: true,
+        },
+        {
+          label: 'ქუთაისი',
+          icon: 'System/Pin2-Outline',
+          style: 'secondary',
+          event: 'openCitySelector',
+        },
+      ],
     };
+  },
+  methods: {
+    onOpenCitySelector() {
+      alert('city selector opened');
+    },
+    onOpenMenu() {
+      alert('menu opened');
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.sf-header {
-  --header-padding: var(--spacer-sm);
-  @include for-desktop {
-    --header-padding: 0;
+.header {
+  background-color: $white;
+  position: relative;
+  margin-bottom: 2rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      270deg,
+      #c6067f 0%,
+      #d6405b 12.66%,
+      #ec8f2a 30.08%,
+      #fac00c 49%,
+      #ffd300 68.42%,
+      #ccc211 84.53%,
+      #ccc211 100%
+    );
   }
 
-  &__logo-image {
-    height: 100%;
+  &__inner {
+    padding: 1rem 0;
+    display: flex;
   }
-}
 
-.header-on-top {
-  z-index: 2;
-}
-
-.nav-item {
-  --header-navigation-item-margin: 0 var(--spacer-base);
-
-  .sf-header-navigation-item__item--mobile {
-    display: none;
+  &__grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
-}
 
-.cart-badge {
-  position: absolute;
-  bottom: 40%;
-  left: 40%;
+  &__row {
+    display: flex;
+    width: 100%;
+  }
+
+  &__col {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  &__logo {
+    width: toRem(88);
+    height: toRem(88);
+    flex-shrink: 0;
+    margin-right: 2rem;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: toRem(12);
+    margin-left: auto;
+  }
+
+  &__search {
+    .input {
+      width: 400px;
+    }
+  }
+
+  &__nav {
+    &--primary {
+      margin-left: -1rem;
+    }
+    &--secondary {
+      margin-left: auto;
+    }
+  }
 }
 </style>

@@ -54,6 +54,10 @@ export default {
       type: [Number, null],
       default: null,
     },
+    hasFade: {
+      type: Boolean,
+      default: true,
+    }
   },
   data() {
     return {
@@ -71,6 +75,7 @@ export default {
         {
           'product-reel--coloured': this.color,
           [`product-reel--${this.color}`]: this.color,
+          'has-fade': this.hasFade,
         },
       ];
     },
@@ -111,7 +116,7 @@ export default {
       box-shadow: 0 toRem(1) toRem(2) rgba(0, 0, 0, .08);
     }
   }
-  &:not(.product-reel--coloured) {
+  &.has-fade {
     &::after {
       content: '';
       display: block;

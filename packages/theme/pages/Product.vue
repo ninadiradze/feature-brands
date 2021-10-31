@@ -1,229 +1,280 @@
 <template>
-  <div id="product">
-    <SfBreadcrumbs
-      class="breadcrumbs desktop-only"
-      :breadcrumbs="breadcrumbs"
-    />
-    <div
-      class="product"
-    >
-      <LazyHydrate when-idle>
-        <SfGallery
-          :images="productGallery"
-          class="product__gallery"
+  <div class="product">
+    <breadcrumbs :links="breadcrumbs" />
+
+    <div class="product__content">
+      <product-gallery />
+      <product-info />
+      <product-purchase />
+    </div>
+
+    <div class="product__additional">
+      <div>
+        <SectionHeader heading="შეიძინე -30% ფასდაკლებით" />
+        <ProductReel
+          :slider-per-view="4"
+          :has-fade="false"
         />
-      </LazyHydrate>
-      <div class="product__info">
-        <div class="product__header">
-          <SfHeading
-            :title="productGetters.getName(product)"
-            :level="3"
-            class="sf-heading--no-underline sf-heading--left"
-          />
-          <SfIcon
-            icon="drag"
-            size="xxl"
-            color="var(--c-text-disabled)"
-            class="product__drag-icon smartphone-only"
-          />
-        </div>
-        <div class="product__price-and-rating">
-          <SfPrice
-            :regular="$n(productGetters.getPrice(product).regular, 'currency')"
-            :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-          />
-          <div>
-            <div class="product__rating">
-              <SfRating
-                :score="averageRating"
-                :max="5"
-              />
-              <a
-                v-if="!!totalReviews"
-                href="#"
-                class="product__count"
-              >
-                ({{ totalReviews }})
-              </a>
-            </div>
-            <SfButton
-              class="sf-button--text"
-              @click="changeTab(2)"
-            >
-              {{ $t('Read all reviews') }}
-            </SfButton>
-            |
-            <SfButton
-              class="sf-button--text"
-              @click="changeNewReview"
-            >
-              Add a review
-            </SfButton>
-          </div>
-        </div>
-        <div>
-          <p
-            v-if="productShortDescription"
-            v-dompurify-html="productShortDescription"
-            class="product__description desktop-only"
-          />
-          <SfButton class="sf-button--text desktop-only product__guide">
-            {{ $t('Size guide') }}
-          </SfButton>
-          <template
-            v-if="configurableOptions.length"
-            v-for="option in configurableOptions"
-          >
-            <div
-              v-if="option.attribute_code === 'color'"
-              :key="option.uid"
-              class="product__colors desktop-only"
-            >
-              <p class="product__color-label">
-                {{ option.label }}:
-              </p>
-              <SfColor
-                v-for="(color, i) in option.values"
-                :key="color.uid"
-                :color="productGetters.getSwatchData(color.swatch_data)"
-                :selected="productConfiguration[option.attribute_uid] === color.uid"
-                class="product__color"
-                @click="() => updateProductConfiguration(option.attribute_uid, color.uid)"
-              />
-            </div>
-            <SfSelect
-              v-else
-              :key="option.uid"
-              :value="productConfiguration[option.attribute_uid]"
-              :label="option.label"
-              class="sf-select--underlined product__select-size"
-              :required="true"
-              @input="($event) => updateProductConfiguration(option.attribute_uid, $event)"
-            >
-              <SfSelectOption
-                v-if="option.values"
-                v-for="attribute in option.values"
-                :key="attribute.uid"
-                :value="attribute.uid"
-              >
-                {{ attribute.label }}
-              </SfSelectOption>
-            </SfSelect>
-          </template>
-          <SfAddToCart
-            v-model="qty"
-            v-e2e="'product_add-to-cart'"
-            :disabled="loading || !canAddToCart"
-            class="product__add-to-cart"
-            @click="addItem({ product, quantity: parseInt(qty) })"
-          />
-        </div>
-        <LazyHydrate when-idle>
-          <SfTabs
-            id="tabs"
-            :open-tab="openTab"
-            class="product__tabs"
-            @click:tab="changeTab"
-          >
-            <SfTab title="Description">
-              <div
-                v-if="productDescription"
-                v-dompurify-html="productDescription"
-                class="product__description"
-              />
-              <!-- @TODO: Check Property in Configurable Products              -->
-              <!--              <SfProperty
-                v-for="(property, i) in properties"
-                :key="i"
-                :name="property.name"
-                :value="property.value"
-                class="product__property"
-              >
-                <template
-                  v-if="property.name === 'Category'"
-                  #value
-                >
-                  <SfButton class="product__property__button sf-button&#45;&#45;text">
-                    {{ property.value }}
-                  </SfButton>
-                </template>
-              </SfProperty>-->
-            </SfTab>
-            <SfTab title="Read reviews">
-              <div v-show="reviewsLoading">
-                <SfLoader />
-              </div>
-              <SfReview
-                v-for="review in reviews"
-                v-show="!reviewsLoading"
-                :key="reviewGetters.getReviewId(review)"
-                :author="reviewGetters.getReviewAuthor(review)"
-                :date="reviewGetters.getReviewDate(review)"
-                :message="reviewGetters.getReviewMessage(review)"
-                :max-rating="5"
-                :rating="reviewGetters.getReviewRating(review)"
-                :char-limit="250"
-                read-more-text="Read more"
-                hide-full-text="Read less"
-                class="product__review"
-              />
-              <div
-                v-show="!reviewsLoading"
-                id="addReview"
-              >
-                <ProductAddReviewForm
-                  @add-review="successAddReview"
-                />
-              </div>
-            </SfTab>
-            <SfTab
-              title="Additional Information"
-              class="product__additional-info"
-            >
-              <div class="product__additional-info">
-                <p class="product__additional-info__title">
-                  {{ $t('Instruction1') }}
-                </p>
-                <p class="product__additional-info__paragraph">
-                  {{ $t('Instruction2') }}
-                </p>
-                <p class="product__additional-info__paragraph">
-                  {{ $t('Instruction3') }}
-                </p>
-              </div>
-            </SfTab>
-          </SfTabs>
-        </LazyHydrate>
+      </div>
+
+      <div>
+        <SectionHeader heading="მსგავსი პროდუქტები" />
+        <ProductReel
+          :slider-per-view="4"
+          :has-fade="false"
+        />
+      </div>
+
+      <div class="product__description">
+        <ul>
+          <li>აღწერა</li>
+        </ul>
+        გამოყენების ინსტრუქცია
+
+
+
+        ნიუცეფი (NEWCEPH ) 1გ/4მლ
+
+        ფხვნილი და გამხსნელი საინექციო ხსნარის დასამზადებლად ინტრამუსკულუrი გამოყენებისთვის
+
+        ცეფტრიაქსონი (ნატრიუმის მარილის სახით)
+
+        პრეპარატის მიღებამდე ყურადღებით გაეცანით ინსტრუქციას, რადგანაც ის შეიცავს თქვენთვის მნიშვნელოვან ინფორმაციას
+
+        შეინახეთ საინფორმაციო ფურცელი. შეიძლება დაგჭირდეთ მისი გადაკითხვა.
+        დამატებითი შეკითხვების შემთხვევაში, მიმართეთ მკურნალ ექიმს ან ფარმაცევტს.
+        აღნიშნული მედიკამენტი დაგენიშნათ თქვენ. არ მისცეთ სხვებს. შეიძლება ზიანი მიაყენოს მათ, იმ შემთხევაშიც კი თუ მათი სიმპტომები თქვენსას ჰგავს.
+        ნებისმიერი გვერდითი მოვლენის გამოვლენის შემთხვევაში, ან თუ შენიშნეთ გვერდითი მოვლენა, რომელიც არ არის აქ აღწერილი, გთხოვთ დაუკავშირდეთ მკურნალ  ექიმს.  იხილეთ პუნქტი  4 .
+        შინაარსი:
+
+        რა არის ნიუცეფი და რა დროს გამოიყენება
+        რა უნდა იცოდეთ ნიუცეფის მიღებამდე
+        ნიუცეფის მიღების წესი
+        მოსალოდნელი გვერდითი ეფექტები
+        ნიუცეფის შენახვის პირობები
+        შეფუთვის შემადგენლობა და დამატებითი ინფორმაცია
+        რა არის ნიუცეფი და რა დროს გამოიყენება
+        ნიუცეფი  წარმოადგენს  ანტიბიოტიკს, რომელიც გამოიყენება მოზრდილებსა და ბავშვებში (მათ შორის ახალშობილებში). იგი ცეფალოსპორინის ჯგუფის ანტიბიოტიკია და გააჩნია ბაქტერიციდული მოქმედება.
+
+        ნიუცეფი  გამოიყენება შემდეგი  ინფექციების სამკურნალოდ:
+
+        თავის ტვინის ინფექციები (მენინგიტი)
+        ფილტვების ინფექციები
+        შუა ყურის ინფექციები
+        მუცლის და მუცლის კედლის ინფექციები (პერიტონიტი)
+        საშარდე გზების და თირკმლები ინფექციები
+        ძვლების და სახსრების ინფექციური დაავადებები
+        კანის ან რბილი ქსოვილების ინფექციური დაავადებები
+        სისხლის ინფექციური დაავადებები
+        გულის ინფექციური დაავადებები
+        შეიძლება დაინიშნოს:
+
+        სქესობრივი გზით გადამდები ინფექციების (გონორეა და ათაშანგი) სამკურნალოდ.
+        პაციენტებში, რომელთაც აღენიშნებათ სისხლის თეთრი უჯრედების რაოდენობის დაქვეითება (ნეიტროპენია) და აქვთ მაღალი ტემპერატურა ბაქტერიული ინფექციის გამო.
+        ქრონიკული ბრონქიტის მქონე მოზრდილებში გულმკერდის ინფექციების სამკურნალოდ.
+        ლაიმის დაავადების (ტკიპის ნაკბენით გამოწვეული) სამკურნალოდ მოზრდილებსა და ბავშვებში, მათ შორის 15 დღეზე მეტი ასაკის ბავშვებში.
+        ოპერაციის დროს ინფექციების თავიდან ასაცილებლად
+        რა უნდა იცოდეთ ნიუცეფის მიღებამდე
+        არ მიიღოთ ნიუცეფი:
+
+        თუ ხართ ალერგიული ცეფტრიაქსონის, ან აღნიშნული მედიკამენტის რომელიმე ინგრედიენტის მიმართ (ჩამოთვლილია მე -6 პუნქტში).
+        თუ გქონიათ უეცარი ან მწვავე ალერგიული რეაქცია პენიცილინის ან მსგავსი ანტიბიოტიკების (როგორიცაა ცეფალოსპორინი, კარბაპენემი ან მონობაქტამი)    მიმართ. სიმპტომებია: ყელის და სახის უეცარი  შეშუპება, რამაც შეიძლება გააძნელოს სუნთქვა და ყლაპვა, ხელების, ფეხების უეცარი  შეშუპება, გამონაყარი, რომელიც სწრაფად ვითარდება.
+        თუ ხართ ალერგიული ლიდოკაინის მიმართ და დაგენიშნათ ნიუცეფი კუნთებში ინექციის სახით.
+        ნიუცეფი არ ინიშნება ბავშვებში:
+
+        თუ ბავშვი დღენაკლულია
+        თუ ახალშობილია (28 დღემდე ) და აქვს სისხლთან დაკავშირებული პრობლემები ან სიყვითლე (კანის და/ან თვალის სკლერების მოყვითალო შეფერილობა) ან იღებს კალციუმის შემცველ მედიკამენტებს ვენიდან.
+        გაფრთხილებები და უსაფრთხოების ზომები
+
+        ნიუცეფის  მიღებამდე შეატყობინეთ  მკურნალ ექიმს ან ფარმაცევტს :
+
+        თუ ცოტა ხნის წინ მიიღეთ ან აპირებთ მიიღოთ კალციუმის შემცველი მედიკამენტი.
+        თუ გქონიათ დიარეა რომელიმე ანტიბიოტიკის მიღებისას. თუ ოდესმე გქონიათ კუჭ-ნაწლავის პრობლემები, კერძოდ კოლიტი (ნაწლავის ანთება).
+        თუ გაწუხებთ ღვიძლთან ან თირკმელთან დაკავშირებული პრობლემები.
+        თუ გაქვთ ქვები ნაღვლის ბუშტში ან ქვები თირკმელში;
+        თუ აღგენიშნებათ სხვა დაავადებები, როგორიცაა ჰემოლიზური ანემია (სისხლის წითელი უჯრედების რაოდენობის შემცირება, რაც იწვევს კანის სიფერმკრთალეს და სიყვითლეს,სისუსტეს  და დისპნოეს).
+        თუ ხართ ნატრიუმის მარილის დიეტაზე
+        თუ დაგჭირდათ სისხლის ან შარდის ანალიზი
+
+        თუ დიდი ხანია იღებთ ნიუცეფს, თქვენ შეიძლება დაგჭირდეთ რეგულარული სისხლის ანალიზის ჩატარება. ნიუცეფმა შეიძლება გავლენა მოახდინოს შარდის ანალიზის (შაქრის განსაზღვრა შარდში ) და სისხლის ანალიზის (კუმბსის ტესტის) შედეგებზე. ანალიზის ჩატარებისას:
+
+        აცნობეთ ექიმს, რომ თქვენ იღებთ ნიუცეფს.
+        თუ გაქვთ დიაბეტი ან გჭირდებათ სისხლში შაქრის დონის მონიტორინგი არ უნდა გამოიყენოთ სისხლში გლუკოზის მონიტორინგის ისეთი სისტემა, რომელმაც შესაძლოა არასწორად გაზომოს  სისხლში შაქრის დონე ცეფტრიაქსონის მიღებისას. თუ ასეთ სისტემას იყენებთ შეამოწმეთ გამოყენების ინსტრუქცია და აცნობეთ ექიმს, ფარმაცევტს ან ექთანს. საჭიროების შემთხვევაშიგამოიყენეთ  ანალიზის ალტერნატიული მეთოდი .
+
+        ბავშვები
+
+        ბავშვებისთვის ნიუცეფის მიცემამდე აცნობეთ ექიმს, ფარმაცევტს ან ექთანს:
+
+        თუ ბავშვმა ცოტა ხნის წინ მიიღო ან უნდა მიიღოს კალციუმის შემცველი მედიკამენტი ვენიდან.
+        ნიუცეფის  გამოყენება სხვა მედიკამენტებთან ერთად
+
+        აცნობეთ მკურნალ ექიმს ან ფარმაცევტს თუ ამჟამად იღებთ, ახლო წარსულში იღებდით ან აპირებთ მიიღოთ სხვა პრეპარატები. კერძოდ, აცნობეთ ექიმს ან ფარმაცევტს, თუ იღებთ შემდეგ მედიკამენტებს:
+
+        ანტიბიოტიკის სახეობა ამინოგლიკოზიდი.
+        ანტიბიოტიკი ქლორამფენიკოლი (რომელიც გამოიყენება ინფექციების, კერძოდ თვალების ინფექციების სამკურნალოდ).
+        ორსულობა, ლაქტაცია და ფერტილობა
+
+        თუ ხართ ორსულად ან ეჭვი გაქვთ ორსულობაზე ან გეგმავთ ორსულობას, ან გაქვთ ლაქტაციის პერიოდი,  მედიკამენტის მიღებამდე მიმართეთ ექიმს.
+
+        ექიმი თავად განსაზღვრავს დაგინიშნოთ თუ არა ნიუცეფით მკურნალობა.
+
+        მანქანის ან სხვა მექანიზმის მართვა
+
+        ნიუცეფმა შეიძლება გამოიწვიოს თავბრუსხვევა. თუ აღგენიშნებათ თავბრუსხვევა  არ მართოთ  მანქანა ან სხვა მექანიზმი. აღნიშნული სიმპტომების გამოვლენისას მიმართეთ ექიმს.
+
+        ნიუცეფის მიღების  წესი
+        ნიუცეფის ინექციას, როგორც წესი, აკეთებს ექიმი ან ექთანი. ინექცია კეთდება პირდაპირ კუნთში.
+
+        არ შეიძლება ნიუცეფის  შერევა სხვა მედიკამენტთან ან მისი გაკეთება კალციუმის შემცველ ინექციასთან  ერთად.
+
+        ჩვეულებრივი დოზა
+
+        ექიმი განსაზღვრავს ნიუცეფის სწორ  დოზას.  დოზა დამოკიდებულია ინფექციის სიმძიმესა და ტიპზე; თქვენს წონასა და ასაკზე; სხვა ანტიბიოტიკების მიღებაზე; თქვენი თირკმლებისა და ღვიძლის ფუნქციონირებაზე. ნიუცეფით მკურნალობის ხანგრძლივობა დამოკიდებულია  ინფექციის ტიპზე.
+
+        50კგ ან მეტი წონის მოზრდილები, ხანდაზმულები და 12 წლის და უფროსი ასაკის  მოზარდები:
+
+        1-2 გ დღეში, ინფექციის სიმძიმისა და ტიპის გათვალისწინებით. მწვავე ინფექციის შემთხვევაში ექიმი გაგიზრდით დოზას (4გ-მდე დღეში). იმ შემთხვევაში, თუ თქვენი ყოველდღიური დოზა აღემატება 2გ-ს, შეგიძლიათ მიიღოთ  დღეში ერთხელ ან განახევრებული დოზით დღეში ორჯერ.
+        50კგ -ზე ნაკლები წონის 15 დღიდან 12 წლამდე ასაკის ახალშობილები, მცირეწლოვნები და ბავშვები :
+
+        50-80მგ ნიუცეფი ბავშვის სხეულის წონის თითო კგ-ზე დღეში ერთხელ ინფექციის სიმძიმისა და ტიპის გათვალისწინებით. მწვავე ინფექციის შემთხვევაში ექიმი გაგიზრდით დოზას 100მგ-მდე ბავშვის სხეულის წონის თითო კგ-ზე, დღიურმა დოზამ არ უნდა გადააჭარბოს 4გ-ს.  იმ შემთხვევაში, თუ თქვენი ყოველდღიური დოზა აღემატება 2გ-ს, შეგიძლიათ მიიღოთ  დღეში ერთხელ ან განახევრებული დოზით დღეში ორჯერ.
+        50 კგ ან მეტი სხეულის წონის ბავშვებისთვის გამოყენებული უნდა იყოს მოზრდილთა ჩვეულებრივი დოზა.
+        ახალშობილები (14 დღემდე)
+
+        20-დან 50 მგ –მდე ნიუცეფი ბავშვის სხეულის წონის თითო კგ-ზე დღეში ერთხელ ინფექციის სიმძიმისა და ტიპის გათვალისწინებით.
+        დღიურმა დოზამ არ უნდა გადააჭარბოს 50მგ-სბავშვის სხეულის წონის თითო კგ-ზე.
+        პაციენტები ღვიძლის ან თირკმლის პრობლემებით:
+
+        შეიძლება დაგენიშნოთ განსხვავებული დოზა. მკურნალი ექიმი თავად განსაზღვრავს თქვენთვის დოზას.
+
+        დოზის გადაჭარბება:
+
+        თუ შემთხვევით მიიღეთ დანიშნულზე მეტი დოზა, დაუყოვნებლივ მიმართეთ ექიმს ან უახლოეს საავადმყოფოს.
+
+        დოზის გამოტოვება:
+
+        თუ დაგავიწყდათ პრეპარატის მიღება მიიღეთ იგი გახსენებისთანავე. თუმცა, თუ მოახლოებულია შემდეგი დოზის მიღების დრო, არ მიიღოთ გამოტოვებული დოზა. გამოტოვებული დოზის კომპენსაციისათვის არ მიიღოთ ორმაგი დოზა .
+
+        ნიუცეფის  მიღების  შეწყვეტა
+
+        არ შეწყვიტოთ ნიუცეფით მკურნალობა ექიმის კონსულტაციის გარეშე. აღნიშნულ პროდუქტთან დაკავშირებით დამატებითი კითხვების შემთხვევაში, მიმართეთ ექიმს ან ექთანს.
+
+        მოსალოდნელი გვერდითი ეფექტები
+        სხვა მედიკამენტიებს მსგავსად ამ პრეპარატმაც შესაძლოა გამოიწვიოს გვერდითი
+        ეფექტები, თუმცა არა ყველა პაციენტში.  შეიძლება განვითარდეს შემდეგი გვერდითი მოვლენები:
+
+        მწვავე ალერგიული რეაქციები (უცნობი, არსებული მონაცემების საფუძველზე სიხშირის  დადგენა  შეუძლებელია)
+
+        თუ აღგენიშნებათ მწვავე ალერგიული რეაქცია, დაუყოვნებლივ მიმართეთ ექიმს .
+
+        სიმპტომებია:
+
+        ტუჩების, სახის, ყელის ან პირის შეშუპება, რომელიც იწვევს სუნთქვის გაძნელებას ან ყლაპვას.
+        ხელების, ფეხების უეცარი შეშუპება
+        მწვავე  გამონაყარი (უცნობი, არსებული მონაცემების საფუძველზე სიხშირის  დადგენა  შეუძლებელია)
+
+        თუ აღგენიშნებათ მწვავე გამონაყარია, დაუყოვნებლივ მიმართეთ ექიმს .
+
+        სიმპტომებია: მწვავე გამონაყარი, რომელიც სწრაფად ვითარდება, ბუშტუკები ან კანის აქერცვლა და შესაძლო ბუშტუკები პირის ღრუში.
+        ვლინდება ასევე შემდეგი გვერდითი მოვლენები:
+
+        ხშირი ( ვლინდება 10-დან 1 პაციენტში):
+
+        სისხლის თეთრ უჯრედებთან ( როგორიცაა ლეიკოციტების რაოდენობის შემცირება და ეოზინოფილების რაოდენობის ზრდა)თრომბოციტებთან დაკავშირებული  დარღვევები (თრომბოციტების რაოდენობის შემცირება).
+        ფხვიერი განავალი ან დიარეა.
+        ღვიძლის ფუნქციური სინჯების ცვლილებები.
+        გამონაყარი
+        არახშირი  ( ვლინდება 100- დან 1 პაციენტში):
+
+        სოკოვანი ინფექცია (მაგ. კანდიდოზური სტომატიტი).
+        სისხლის თეთრი უჯრედების რაოდენობის შემცირება  (გრანულოციტოპენია).
+        სისხლის წითელი უჯრედების რაოდენობის შემცირება  (ანემია).
+        სისხლის შედედების პრობლემები. სიმპტომებია: სისხლჩაქცევები და სახსრების ტკივილი და შეშუპება.
+        თავის ტკივილი.
+        თავბრუსხვევა.
+        გულისრევა ან ღებინება.
+        ქავილი
+        ტკივილის ან წვის შეგრძნება ვენის  არეში ნიუცეფის მიღებისას. ტკივილი ინექციისას.
+        მაღალი ტემპერატურა (ცხელება).
+        თირკმლის ფუნქციური სინჯები (გაზრდილი კრეატინინი).
+        იშვიათი ( ვლინდება 1 000- დან 1 პაციენტში ):
+
+        მსხვილი ნაწლავის ანთება (კოლინჯი). სიმპტომები: სისხლიანი და ლორწოიანი განავალი, მუცლის ტკივილი და ცხელება.
+        სუნთქვის გაძნელება (ბრონქოსპაზმი).
+        გამონაყარი (ჭინჭრის ციება), შესაძლოა მთელ სხეულზე, თან ახლავს ქავილი და შეშუპება.
+        სისხლი ან შაქარი შარდში.
+        შეშუპება (სითხის დაგროვება).
+        კანკალი.
+        უცნობი (არსებული მონაცემების საფუძველზე სიხშირის  დადგენა  შეუძლებელია):
+
+        მეორადი ინფექცია, რომელიც არ რეაგირებს ადრე გამოწერილ ანტიბიოტიკზე.
+        ანემიის ფორმა, როცა სისხლის წითელი უჯრედების დონე დაქვეითებულია (ჰემოლიზური ანემია) .
+        სისხლში ლეიკოციტების რიცხვის  შემცირება (აგრანულოციტოზი).
+        კონვულსია.
+        ვერტიგო.
+        პანკრეასის ანთება (პანკრეატიტი ). სიმპტომები: მუცლის მწვავე ტკივილი , რომელიც ვრცელდება ზურგის არეში.
+        პირის ღრუს ლორწოვანი გარსის ანთება (სტომატიტი).
+        ენის ანთება (გლოსიტი). სიმპტომები: ენის შეშუპება, სიწითლე და ტკივილის შეგრძნება.
+        ნაღვლის ბუშტთან დაკავშირებული პრობლემები, რომელმაც შეიძლება გამოიწვიოს ტკივილი, გულისრევა და ღებინება.
+        ნევროლოგიური მდგომარეობა ახალშობილებში, სიყვითლე (ბილირუბინული ენცეფალოპათია).
+        თირკმლების პრობლემები. ტკივილი შარდის გამოყოფისას ან შემცირებული შარდვა.
+        კუმბსის ტესტის ცრუ დადებითი შედეგი.
+        გალაქტოზემიის ცრუ დადებითი შედეგი.
+        ნიუცეფმა შეიძლება გავლენა მოახდინოს სისხლში გლუკოზის დონეზე - შეამოწმეთ ექიმთან.
+        ინფორმირება  გვერდითი ეფექტების შესახებ
+
+        თუ შენიშნავთ ნებისმიერ გვერდით მოვლენას, მათ შორის ისეთ ეფექტებს, რომლებიც არ არის აღწერილი გამოყენების ინსტრუქციაში აცნობეთ ექიმს, ფარმაცევტს ან ექთანს. გვერდითი ეფექტების შესახებ შეგიძლიათ განაცხადოთ პირდაპირ ჯანდაცვის უწყებაში.  გვერდითი ეფექტების შესახებ ინფორმაციის მიწოდებით თქვენ ხელს შეუწყობთ პრეპარატის უსაფრთხო გამოყენებას.
+
+        ნიუცეფის  შენახვის პირობები
+        შეინახეთ ბავშვებისთვის მიუწვდომელ ადგილას.
+
+        არ გამოიყენოთ აღნიშნული მედიკამენტი შეფუთვაზე და ფლაკონზე აღნიშნული ვარგისიანობის ვადის გასვლის შემდეგ.  ვარგისიანობის ვადა ვრცელდება აღნიშნული თვის ბოლო დღემდე.
+
+        აღნიშნული პრეპარატი არ საჭიროებს შენახვის განსაკუთრებულ პირობებს. შეინახეთ ფლაკონი კოლოფში სინათლისგან დასაცავად.
+
+        გახსნილი მედიკამენტის  ქიმიური და ფიზიკური თვისებები  ნარჩუნდება სულ მცირე 6 საათის განმავლობაში 250C და უფრო მაღალ ტემპერატურაზე ან 24 საათის განმავლობაში 2-80C ტემპერატურაზე.
+
+        მიკრობიოლოგიური თვალსაზრისით, პროდუქტი გამოყენებულ უნდა იქნეს გახსნისთანავე, წინააღმდეგ შემთხვევაში დაირღვევა  შენახვის ვადა და პირობები.   მედიკამენტები  არ გადააგდოთ კანალიზაციაში. ჰკითხეთ ფარმაცევტს მისი უტილიზაციის შესახებ.  აღნიშნული ზომები ხელს შეუწყობს გარემოს დაცვას.
+
+        შეფუთვის შემცველობა და დამატებითი ინფორმაცია
+        ნიუცეფი 1გ/4მლ  ფხვნილი და გამხსნელი საინექციო ხსნარის დასამზადებლად ინტრამუსკულარული გამოყენებისთვის
+
+        თითოეული   ფლაკონის შემადგენლობაში შედის:
+
+        აქტიური ნივთიერება: ცეფტრიაქსონი დისოდიუმის მარილი ჰემი(ჰეპტაჰიდრატი) 1,193გ შესაბამისი 1გ ცეფტრიაქსონი.
+
+        გამხსნელის თითოეული ამპულის  შემადგენლობაში შედის:
+
+        1% ლიდოკაინის ჰიდროქლორიდი
+
+        გაცემის წესი:
+
+        ფარმაცევტული პროდუქტის ჯგუფი II, გაიცემა ფორმა N3 რეცეპტით.
+
+        სავაჭრო ლიცენზიის მფლობელი და მწარმოებელი
+
+        სავაჭრო ლიცენზიის მფლობელი:
+
+        შპს ნიუ ფარმ გრუპი
+
+        საქართველო, თბილისი, ვაკე–საბურთალოს რაიონი, დ. აღმაშენებლის ხეივ.  XII კმ კორ. 2 ბ. 43
+
+        ბეჭედდასმულია
+
+        მწარმოებელი:
+
+        Facta Farmaceutici  S.p.A.
+
+        იტალია, ტერამოს პროვინცია , სან ნიკოლო ა ტორდინო
+
+        აღნიშნული ინსტრუქციის ბოლო დამტკიცების თარიღია:   2017  წლის სექტემბერი
       </div>
     </div>
-    <LazyHydrate
-      v-if="relatedProducts.length"
-      when-visible
-    >
-      <ProductsCarousel
-        :products="relatedProducts"
-        :title="$t('Match it with')"
-      />
-    </LazyHydrate>
-    <LazyHydrate
-      v-if="upsellProducts.length"
-      when-visible
-    >
-      <ProductsCarousel
-        :products="upsellProducts"
-        :title="$t('Other products you might like')"
-      />
-    </LazyHydrate>
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
-    <LazyHydrate when-visible>
-      <MobileStoreBanner />
-    </LazyHydrate>
   </div>
 </template>
 <script>
 import LazyHydrate from 'vue-lazy-hydration';
+import SectionHeader from '../components/SectionHeader.vue';
+import ProductReel from '../components/ProductReel.vue';
 import {
   SfAddToCart,
   SfBreadcrumbs,
@@ -255,6 +306,11 @@ import ProductAddReviewForm from '~/components/ProductAddReviewForm.vue';
 import MobileStoreBanner from '~/components/MobileStoreBanner.vue';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import { useVueRouter } from '~/helpers/hooks/useVueRouter';
+import Breadcrumbs from '~/components/Base/Breadcrumbs';
+import ProductGallery from '~/components/ProductGallery';
+import ProductInfo from '~/components/ProductInfo';
+import ProductPurchase from '~/components/ProductPurchase';
+
 export default {
   name: 'Product',
   components: {
@@ -276,6 +332,12 @@ export default {
     SfReview,
     SfSelect,
     SfTabs,
+    Breadcrumbs,
+    ProductGallery,
+    ProductInfo,
+    ProductPurchase,
+    SectionHeader,
+    ProductReel,
   },
   transition: 'fade',
   setup() {
@@ -321,9 +383,14 @@ export default {
     const totalReviews = computed(() => reviewGetters.getTotalReviews(baseReviews.value));
     const averageRating = computed(() => reviewGetters.getAverageRating(baseReviews.value));
     const breadcrumbs = computed(() => {
-      const productCategories = product.value.categories;
-      return productGetters.getBreadcrumbs(product.value,
-        Array.isArray(productCategories) ? [...productCategories].pop() : []);
+      // const productCategories = product.value.categories;
+      // return productGetters.getBreadcrumbs(product.value,
+      //   Array.isArray(productCategories) ? [...productCategories].pop() : []);
+      return [
+        { label: 'მთავარი', url: '/' },
+        { label: 'პროდუქცია', url: '/' },
+        { label: 'დედა და ბავშვი', url: '/' }
+      ]
     });
     const productGallery = computed(() => productGetters.getGallery(product.value)
       .map((img) => ({
@@ -430,174 +497,66 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#product {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1272px;
-    margin: 0 auto;
-  }
-}
-.product-loader {
-  height: 38px;
-  margin: var(--spacer-base) auto var(--spacer-lg)
-}
 .product {
-  @include for-desktop {
-    display: flex;
-  }
-  &__info {
-    margin: var(--spacer-sm) auto;
-    @include for-desktop {
-      max-width: 32.625rem;
-      margin: 0 0 0 7.5rem;
-    }
-  }
-  &__header {
-    --heading-title-color: var(--c-link);
-    --heading-title-font-weight: var(--font-weight--bold);
-    --heading-padding: 0;
-    margin: 0 var(--spacer-sm);
+  padding-top: toRem(22);
+
+  &__content {
     display: flex;
     justify-content: space-between;
-    @include for-desktop {
-      --heading-title-font-weight: var(--font-weight--semibold);
-      margin: 0 auto;
-    }
+    align-items: flex-start;
+    column-gap: toRem(16);
+    margin-top: toRem(26);
   }
-  &__drag-icon {
-    animation: moveicon 1s ease-in-out infinite;
+
+  &__gallery {
+    width: toRem(560);
   }
-  &__price-and-rating {
-    margin: 0 var(--spacer-sm) var(--spacer-base);
-    align-items: center;
-    @include for-desktop {
-      display: flex;
-      justify-content: space-between;
-      margin: var(--spacer-sm) 0 var(--spacer-lg) 0;
-    }
+
+  &__info {
+    width: calc(100% - 928px);
   }
-  &__rating {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin: var(--spacer-xs) 0 var(--spacer-xs);
+
+  &__purchase {
+    width: toRem(368);
   }
-  &__count {
-    @include font(
-        --count-font,
-        var(--font-weight--normal),
-        var(--font-size--sm),
-        1.4,
-        var(--font-family--secondary)
-    );
-    color: var(--c-text);
-    text-decoration: none;
-    margin: 0 0 0 var(--spacer-xs);
+
+  &__additional {
+    width: calc(100% - 368px);
   }
+
   &__description {
-    @include font(
-        --product-description-font,
-        var(--font-weight--light),
-        var(--font-size--base),
-        1.6,
-        var(--font-family--primary)
-    );
-  }
-  &__select-size {
-    margin: 0 var(--spacer-sm);
-    @include for-desktop {
-      margin: 0;
-    }
-  }
-  &__colors {
-    @include font(
-        --product-color-font,
-        var(--font-weight--normal),
-        var(--font-size--lg),
-        1.6,
-        var(--font-family--secondary)
-    );
-    display: flex;
-    align-items: center;
-    margin-top: var(--spacer-xl);
-  }
-  &__color-label {
-    margin: 0 var(--spacer-lg) 0 0;
-  }
-  &__color {
-    margin: 0 var(--spacer-2xs);
-  }
-  &__add-to-cart {
-    margin: var(--spacer-base) var(--spacer-sm) 0;
-    @include for-desktop {
-      margin-top: var(--spacer-2xl);
-    }
-  }
-  &__guide,
-  &__compare,
-  &__save {
-    display: block;
-    margin: var(--spacer-xl) 0 var(--spacer-base) auto;
-  }
-  &__compare {
-    margin-top: 0;
-  }
-  &__tabs {
-    --tabs-title-z-index: 0;
-    margin: var(--spacer-lg) auto var(--spacer-2xl);
-    --tabs-title-font-size: var(--font-size--lg);
-    @include for-desktop {
-      margin-top: var(--spacer-2xl);
-    }
-  }
-  &__property {
-    margin: var(--spacer-base) 0;
-    &__button {
-      --button-font-size: var(--font-size--base);
-    }
-  }
-  &__review {
-    padding-bottom: 24px;
-    border-bottom: var(--c-light) solid 1px;
-    margin-bottom: var(--spacer-base);
-  }
-  &__additional-info {
-    color: var(--c-link);
-    @include font(
-        --additional-info-font,
-        var(--font-weight--light),
-        var(--font-size--sm),
-        1.6,
-        var(--font-family--primary)
-    );
-    &__title {
-      font-weight: var(--font-weight--normal);
-      font-size: var(--font-size--base);
-      margin: 0 0 var(--spacer-sm);
-      &:not(:first-child) {
-        margin-top: 3.5rem;
+    margin-top: toRem(32);
+    padding: 0 toRem(24) toRem(24);
+    font-size: toRem(14);
+    line-height: toRem(22);
+    color: #231444;
+    background: white;
+    box-shadow: 0 toRem(1) toRem(2) rgba(53, 66, 82, 0.08), 0 toRem(3) toRem(12) rgba(53, 66, 82, 0.04);
+    border-radius: 8px;
+    white-space: pre-line;
+
+    ul {
+      margin: toRem(2) 0 0;
+      padding: 0;
+      list-style-type: none;
+      border-bottom: toRem(1) solid #F2F3F8;
+
+      li {
+        display: inline-flex;
+        align-items: center;
+        font-size: toRem(16);
+        font-weight: bold;
+        color: #253988;
+        height: toRem(63);
+        border-bottom: toRem(2) solid #253988;
+        cursor: pointer;
       }
     }
-    &__paragraph {
-      margin: 0;
-    }
   }
-  &__gallery {
-    flex: 1;
-  }
-}
-.breadcrumbs {
-  margin: var(--spacer-base) auto var(--spacer-lg);
-}
-@keyframes moveicon {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, 30%, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
+
+  .section-header {
+    margin-top: toRem(32);
+    margin-bottom: toRem(24);
   }
 }
 </style>
