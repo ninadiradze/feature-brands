@@ -30,7 +30,7 @@
                     icon-only
                     icon="System/User-Outline"
                   />
-                  <Button type="bordered" icon="System/Basket-Outline">
+                  <Button type="filled-inverted" icon="System/Basket-Outline">
                     კალათა
                   </Button>
                 </div>
@@ -39,12 +39,19 @@
             <div class="header__row">
               <div class="header__col">
                 <div class="header__nav header__nav--primary">
-                  <Navigation :items="navigationPrimary" />
+                  <Navigation
+                    :items="navigationPrimary"
+                    @openMenu="onOpenMenu"
+                  />
                 </div>
               </div>
               <div class="header__col">
                 <div class="header__nav header__nav--secondary">
-                  <Navigation :items="navigationSecondary" />
+                  <Navigation
+                    :items="navigationSecondary"
+                    :wrap-items="false"
+                    @openCitySelector="onOpenCitySelector"
+                  />
                 </div>
               </div>
             </div>
@@ -73,6 +80,7 @@ export default defineComponent({
           icon: 'System/Menu-Outline',
           iconRight: 'System/Chevron-Down',
           style: 'primary',
+          event: 'openMenu',
         },
         {
           divider: true,
@@ -114,9 +122,18 @@ export default defineComponent({
           label: 'ქუთაისი',
           icon: 'System/Pin2-Outline',
           style: 'secondary',
+          event: 'openCitySelector',
         },
       ],
     };
+  },
+  methods: {
+    onOpenCitySelector() {
+      alert('city selector opened');
+    },
+    onOpenMenu() {
+      alert('menu opened');
+    },
   },
 });
 </script>
@@ -125,6 +142,7 @@ export default defineComponent({
 .header {
   background-color: $white;
   position: relative;
+  margin-bottom: 2rem;
 
   &::after {
     content: '';
