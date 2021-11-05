@@ -107,6 +107,16 @@ export default {
     color: $text-blue;
   }
 
+  &--light {
+    background-color: $gray-light-2;
+    color: #231444;
+
+    &:hover {
+      background: rgba(37, 57, 136, 0.1);
+      color: #253988;
+    }
+  }
+
   &--lg {
     @include subtitle-6;
     padding: 0.75rem 1.25rem;

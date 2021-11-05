@@ -3,6 +3,7 @@
     <breadcrumbs :links="breadcrumbs" />
 
     <div class="product__content">
+      {{ productGetters.getName(product) }}
       <product-gallery />
       <product-info />
       <product-purchase />
@@ -363,6 +364,7 @@ export default {
         attributes: route.query,
       });
     });
+    console.log(useProduct(`product-${id}`))
     const productShortDescription = computed(() => product.value.short_description?.html || '');
     const productDescription = computed(() => product.value.description?.html || '');
     const canAddToCart = computed(() => {
