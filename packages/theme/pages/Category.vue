@@ -1,375 +1,182 @@
 <template>
-  <div id="category">
-    <SfBreadcrumbs
-      class="breadcrumbs desktop-only"
-      :breadcrumbs="breadcrumbs"
-    />
-    <div class="navbar section">
-      <div class="navbar__aside desktop-only">
-        <LazyHydrate never>
-          <SfHeading
-            :level="3"
-            :title="$t('Categories')"
-            class="navbar__title"
-          />
-        </LazyHydrate>
+  <div class="category">
+    <breadcrumbs :links="breadcrumbs" />
+    <h1 class="category__title">დედა და ბავშვი</h1>
+
+    <div class="category__brands">
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <CategoryBox
+        title="ბავშვის კვება"
+        subtitle="480+ პროდუქცია"
+        image="/test/image1.png"
+      />
+    </div>
+
+    <div class="category__banners">
+      <Banner
+        color="green"
+        title="აფთიაქი"
+        subtitle="8500+ პროდუქცია"
+        image="/test/image1.png"
+      />
+      <Banner
+        color="yellow"
+        title="ოჯახზე ზრუნვა"
+        subtitle="960+ პროდუქცია"
+        image="/test/image2.png"
+      />
+    </div>
+
+    <div class="category__content">
+      <div class="category__filter">
+        <div class="category__filter-header">
+          ფილტრი
+        </div>
+
+        <div class="category__filter-body">
+          <div class="category__filter-item">
+            <div class="category__filter-title">კატეგორიები</div>
+            <ul>
+              <li class="parent">
+                <a href="#">
+                  <span class="arrow">
+                    <Icon
+                      name="chevron-left"
+                      :width="20"
+                      :height="20"
+                    />
+                  </span>
+                  დედა და ბავშვი
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="arrow">
+                    <Icon
+                      name="chevron-right"
+                      :width="20"
+                      :height="20"
+                    />
+                  </span>
+                  ბავშვის კვება
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="arrow">
+                    <Icon
+                      name="chevron-right"
+                      :width="20"
+                      :height="20"
+                    />
+                  </span>
+                  ბავშვის კვება
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="arrow">
+                    <Icon
+                      name="chevron-right"
+                      :width="20"
+                      :height="20"
+                    />
+                  </span>
+                  ბავშვის კვება
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <span class="arrow">
+                    <Icon
+                      name="chevron-right"
+                      :width="20"
+                      :height="20"
+                    />
+                  </span>
+                  ბავშვის კვება
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="category__filter-item category__filter-item--price">
+            <div class="category__filter-title">ფასი</div>
+
+            <div class="category__filter-item__grid">
+              <Input label="მინ" />
+              <Input label="მაქს" />
+            </div>
+          </div>
+
+          <div class="category__filter-item">
+            <div class="category__filter-title">ბრენდები</div>
+            <CheckBox />
+            <CheckBox />
+            <CheckBox />
+            <CheckBox />
+            <CheckBox />
+          </div>
+
+          <div class="category__filter-item">
+            <div class="category__filter-title">ბრენდები</div>
+            <CheckBox />
+            <CheckBox />
+            <CheckBox />
+          </div>
+        </div>
       </div>
+      <div class="category__products">
+        <div class="category__products-header">
+          <div class="category__text">2 840 პროდუქტი</div>
 
-      <div class="navbar__main">
-        <LazyHydrate on-interaction>
-          <SfButton
-            class="sf-button--text navbar__filters-button"
-            aria-label="Filters"
-            @click="toggleFilterSidebar"
-          >
-            <SfIcon
-              size="24px"
-              color="dark-secondary"
-              icon="filter2"
-              class="navbar__filters-icon"
-            />
-            {{ $t('Filters') }}
-          </SfButton>
-        </LazyHydrate>
-
-        <div class="navbar__sort desktop-only">
-          <span class="navbar__label">{{ $t('Sort by') }}:</span>
-          <LazyHydrate on-interaction>
-            <SfSelect
-              :value="sortBy.selected"
-              placeholder="Select sorting"
-              class="navbar__select"
-              @input="th.changeSorting"
-            >
-              <SfSelectOption
-                v-for="option in sortBy.options"
-                :key="option.value"
-                :value="option.value"
-                class="sort-by__option"
-              >
-                {{ $t(option.label) }}
-              </SfSelectOption>
-            </SfSelect>
-          </LazyHydrate>
+          <div class="category__products-action">
+            <ul>
+              <li>
+                <DropdownButton>20</DropdownButton>
+              </li>
+              <li>
+                <DropdownButton>პოპულარობით</DropdownButton>
+              </li>
+            </ul>
+          </div>
         </div>
-
-        <div class="navbar__counter">
-          <span class="navbar__label desktop-only">{{ $t('Products found') }}</span>
-          <span class="desktop-only">{{ pagination.totalItems }}</span>
-          <span class="navbar__label smartphone-only">{{ pagination.totalItems }} {{
-            $t('Items')
-          }}</span>
-        </div>
-
-        <div class="navbar__view">
-          <span class="navbar__view-label desktop-only">{{ $t('View') }}</span>
-          <SfIcon
-            class="navbar__view-icon"
-            :color="isCategoryGridView ? 'black' : 'dark-secondary'"
-            icon="tiles"
-            size="12px"
-            role="button"
-            aria-label="Change to grid view"
-            :aria-pressed="isCategoryGridView"
-            @click="changeToCategoryGridView"
-          />
-          <SfIcon
-            class="navbar__view-icon"
-            :color="!isCategoryGridView ? 'black' : 'dark-secondary'"
-            icon="list"
-            size="12px"
-            role="button"
-            aria-label="Change to list view"
-            :aria-pressed="!isCategoryGridView"
-            @click="changeToCategoryListView"
+        <div class="category__products-body">
+          <Product
+            v-for="product in 20"
+            :key="productGetters.getSlug(product)"
+            title="Esthederm - ესტედერმი კრემი ნაოჭების და სხვა ჭრილების გამოსატყნავი ექსტრა სპეც სოუსით"
+            price="37.40"
+            special-price="29.40"
+            image="/test/image4.png"
           />
         </div>
       </div>
     </div>
-
-    <div class="main section">
-      <div class="sidebar desktop-only">
-        <LazyHydrate when-idle>
-          <SfLoader
-            :class="{ 'loading--categories': categoriesLoading }"
-            :loading="categoriesLoading"
-          >
-            <SfAccordion
-              :open="activeCategory"
-              :show-chevron="true"
-            >
-              <SfAccordionItem
-                v-for="(cat, i) in categoryTree && categoryTree.items"
-                :key="i"
-                :header="cat.label"
-              >
-                <SfList class="list">
-                  <SfListItem class="list__item">
-                    <SfMenuItem
-                      :count="cat.count || ''"
-                      :label="cat.label"
-                    >
-                      <template #label>
-                        <nuxt-link
-                          :to="localePath(th.getAgnosticCatLink(cat))"
-                          :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
-                        >
-                          All
-                        </nuxt-link>
-                      </template>
-                    </SfMenuItem>
-                  </SfListItem>
-                  <SfListItem
-                    v-for="(subCat, j) in cat.items"
-                    :key="j"
-                    class="list__item"
-                  >
-                    <SfMenuItem
-                      :count="subCat.count || ''"
-                      :label="subCat.label"
-                    >
-                      <template #label="{ label }">
-                        <nuxt-link
-                          :to="localePath(th.getAgnosticCatLink(subCat))"
-                          :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
-                        >
-                          {{ label }}
-                        </nuxt-link>
-                      </template>
-                    </SfMenuItem>
-                  </SfListItem>
-                </SfList>
-              </SfAccordionItem>
-            </SfAccordion>
-          </SfLoader>
-        </LazyHydrate>
-      </div>
-      <SfLoader
-        :class="{ loading }"
-        :loading="loading"
-      >
-        <div
-          v-if="!loading"
-          class="products"
-        >
-          <transition-group
-            v-if="isCategoryGridView"
-            appear
-            name="products__slide"
-            tag="div"
-            class="products__grid"
-          >
-            <SfProductCard
-              v-for="(product, i) in products"
-              :key="productGetters.getSlug(product)"
-              v-e2e="'category-product-card'"
-              class="products__product-card"
-              :style="{ '--index': i }"
-              :title="productGetters.getName(product)"
-              :image="productGetters.getProductThumbnailImage(product)"
-              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-              :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-              :score-rating="productGetters.getAverageRating(product)"
-              :reviews-count="productGetters.getTotalReviews(product)"
-              :show-add-to-cart-button="true"
-              :is-added-to-cart="isInCart({ product })"
-              :is-on-wishlist="product.isInWishlist"
-              :link="
-                localePath(
-                  `/p/${productGetters.getProductSku(
-                    product
-                  )}${productGetters.getSlug(product, product.categories[0])}`
-                )
-              "
-              @click:wishlist="addItemToWishlist(product)"
-              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
-            />
-          </transition-group>
-          <transition-group
-            v-else
-            appear
-            name="products__slide"
-            tag="div"
-            class="products__list"
-          >
-            <SfProductCardHorizontal
-              v-for="(product, i) in products"
-              :key="productGetters.getSlug(product)"
-              class="products__product-card-horizontal"
-              :style="{ '--index': i }"
-              :title="productGetters.getName(product)"
-              :description="productGetters.getDescription(product)"
-              :image="productGetters.getProductThumbnailImage(product)"
-              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-              :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-              :score-rating="productGetters.getAverageRating(product)"
-              :reviews-count="productGetters.getTotalReviews(product)"
-              :is-on-wishlist="product.isInWishlist"
-              :link="
-                localePath(
-                  `/p/${productGetters.getProductSku(
-                    product
-                  )}${productGetters.getSlug(product, product.categories[0])}`
-                )
-              "
-              @click:wishlist="addItemToWishlist(product)"
-              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
-            >
-              <template #configuration>
-                <SfProperty
-                  class="desktop-only"
-                  name="Size"
-                  value="XS"
-                  style="margin: 0 0 1rem 0"
-                />
-                <SfProperty
-                  class="desktop-only"
-                  name="Color"
-                  value="white"
-                />
-              </template>
-              <template #actions>
-                <SfButton
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block"
-                >
-                  {{ $t('Save for later') }}
-                </SfButton>
-              </template>
-            </SfProductCardHorizontal>
-          </transition-group>
-
-          <LazyHydrate on-interaction>
-            <SfPagination
-              v-if="!loading"
-              v-show="pagination.totalPages > 1"
-              class="products__pagination desktop-only"
-              :current="pagination.currentPage"
-              :total="pagination.totalPages"
-              :visible="5"
-            />
-          </LazyHydrate>
-
-          <div
-            v-show="pagination.totalPages > 1"
-            class="products__show-on-page"
-          >
-            <span class="products__show-on-page__label">{{ $t('Show on page') }}</span>
-            <LazyHydrate on-interaction>
-              <SfSelect
-                :value="pagination.itemsPerPage.toString()"
-                class="products__items-per-page"
-                @input="th.changeItemsPerPage"
-              >
-                <SfSelectOption
-                  v-for="option in pagination.pageOptions"
-                  :key="option"
-                  :value="option"
-                  class="products__items-per-page__option"
-                >
-                  {{ option }}
-                </SfSelectOption>
-              </SfSelect>
-            </LazyHydrate>
-          </div>
-        </div>
-      </SfLoader>
-    </div>
-
-    <LazyHydrate when-idle>
-      <SfSidebar
-        :visible="isFilterSidebarOpen"
-        title="Filters"
-        class="sidebar-filters"
-        @close="toggleFilterSidebar"
-      >
-        <div class="filters desktop-only">
-          <div
-            v-for="(facet, i) in facets"
-            :key="i"
-          >
-            <SfHeading
-              :key="`filter-title-${facet.id}`"
-              :level="4"
-              :title="facet.label"
-              class="filters__title sf-heading--left"
-            />
-            <div
-              v-if="isFacetColor(facet)"
-              :key="`${facet.id}-colors`"
-              class="filters__colors"
-            >
-              <SfColor
-                v-for="option in facet.options"
-                :key="`${facet.id}-${option.value}`"
-                :color="option.attrName"
-                :selected="isFilterSelected(facet, option)"
-                class="filters__color"
-                @click="() => selectFilter(facet, option)"
-              />
-            </div>
-            <div v-else-if="facet.id === 'price'">
-              <SfRadio
-                v-for="option in facet.options"
-                :key="`${facet.id}-${option.value}`"
-                :label="`${option.id}${option.count ? ` (${option.count})` : ''}`"
-                :value="option.value"
-                :selected="isFilterSelected(facet, option)"
-                name="priceFilter"
-                @change="() => selectFilter(facet, option)"
-              />
-            </div>
-            <div v-else>
-              <SfFilter
-                v-for="option in facet.options"
-                :key="`${facet.id}-${option.value}`"
-                :label="option.id + `${option.count ? ` (${option.count})` : ''}`"
-                :selected="isFilterSelected(facet, option)"
-                class="filters__item"
-                @change="() => selectFilter(facet, option)"
-              />
-            </div>
-          </div>
-        </div>
-        <SfAccordion class="filters smartphone-only">
-          <div
-            v-for="(facet, i) in facets"
-            :key="i"
-          >
-            <SfAccordionItem
-              :key="`filter-title-${facet.id}`"
-              :header="facet.label"
-              class="filters__accordion-item"
-            >
-              <SfFilter
-                v-for="option in facet.options"
-                :key="`${facet.id}-${option.id}`"
-                :label="option.id"
-                :selected="isFilterSelected(facet, option)"
-                class="filters__item"
-                @change="() => selectFilter(facet, option)"
-              />
-            </SfAccordionItem>
-          </div>
-        </SfAccordion>
-        <template #content-bottom>
-          <div class="filters__buttons">
-            <SfButton
-              class="sf-button--full-width"
-              @click="applyFilters()"
-            >
-              {{ $t('Done') }}
-            </SfButton>
-            <SfButton
-              class="sf-button--full-width filters__button-clear"
-              @click="applyFilters({})"
-            >
-              {{ $t('Clear all') }}
-            </SfButton>
-          </div>
-        </template>
-      </SfSidebar>
-    </LazyHydrate>
   </div>
 </template>
 
@@ -395,6 +202,14 @@ import {
   SfColor,
   SfProperty,
 } from '@storefront-ui/vue';
+import Breadcrumbs from '~/components/Base/Breadcrumbs';
+import Product from '../components/Product';
+import CategoryBox from '../components/Base/CategoryBox.vue';
+import Banner from '../components/Banner.vue';
+import DropdownButton from '../components/Base/DropdownButton';
+import Input from '../components/Base/Input';
+import CheckBox from '../components/Base/CheckBox';
+import Icon from '../components/Icon';
 import {
   ref,
   computed,
@@ -435,6 +250,14 @@ export default defineComponent({
     SfHeading,
     SfProperty,
     LazyHydrate,
+    Breadcrumbs,
+    Product,
+    CategoryBox,
+    Banner,
+    DropdownButton,
+    Input,
+    CheckBox,
+    Icon
   },
   transition: 'fade',
   setup() {
@@ -493,7 +316,14 @@ export default defineComponent({
       routeData.value.entity_uid,
       true,
     ));
-    const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
+    // const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
+    const breadcrumbs = computed(() => {
+      return [
+        { label: 'მთავარი', url: '/' },
+        { label: 'პროდუქცია', url: '/' },
+        { label: 'დედა და ბავშვი', url: '/' }
+      ]
+    });
 
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
     const facets = computed(() => facetGetters.getGrouped(result.value, magentoConfig.facets.available));
@@ -667,381 +497,144 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-#category {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1240px;
-    margin: 0 auto;
-  }
-}
-
-.main {
-  &.section {
-    padding: var(--spacer-xs);
-    @include for-desktop {
-      padding: 0;
-    }
-  }
-}
-
-.breadcrumbs {
-  margin: var(--spacer-base) auto var(--spacer-lg);
-}
-
-.navbar {
-  position: relative;
-  display: flex;
-  border: 1px solid var(--c-light);
-  border-width: 0 0 1px 0;
-  @include for-desktop {
-    border-width: 1px 0 1px 0;
-  }
-
-  &.section {
-    padding: var(--spacer-sm);
-    @include for-desktop {
-      padding: 0;
-    }
-  }
-
-  &__aside,
-  &__main {
-    display: flex;
-    align-items: center;
-    padding: var(--spacer-sm) 0;
-  }
-
-  &__aside {
-    flex: 0 0 15%;
-    padding: var(--spacer-sm) var(--spacer-sm);
-    border: 1px solid var(--c-light);
-    border-width: 0 1px 0 0;
-  }
-
-  &__main {
-    flex: 1;
-    padding: 0;
-    justify-content: space-between;
-    @include for-desktop {
-      padding: var(--spacer-xs) var(--spacer-xl);
-    }
-  }
-
+.category {
   &__title {
-    --heading-title-font-weight: var(--font-weight--semibold);
-    --heading-title-font-size: var(--font-size--xl);
+    @include headline-3;
+    font-weight: bold;
+    color: #231444;
+    margin: toRem(16) 0;
   }
 
-  &__filters-icon {
-    margin: 0 0 0 var(--spacer-xs);
-    order: 1;
-    @include for-desktop {
-      margin: 0 var(--spacer-xs) 0 0;
-      order: 0;
-    }
+  &__brands {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: toRem(16);
+    padding-top: toRem(8);
   }
 
-  &__filters-button {
-    display: flex;
-    align-items: center;
-    --button-font-size: var(--font-size--base);
-    --button-text-decoration: none;
-    --button-color: var(--c-link);
-    --button-font-weight: var(--font-weight--normal);
-    @include for-mobile {
-      --button-font-weight: var(--font-weight--medium);
-      order: 2;
-    }
-
-    svg {
-      fill: var(--c-text-muted);
-      transition: fill 150ms ease;
-    }
-
-    &:hover {
-      svg {
-        fill: var(--c-primary);
-      }
-    }
+  &__banners {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: toRem(16);
+    margin: toRem(24) 0;
   }
 
-  &__label {
-    font-family: var(--font-family--secondary);
-    font-weight: var(--font-weight--normal);
-    color: var(--c-text-muted);
-    @include for-desktop {
-      color: var(--c-link);
-      margin: 0 var(--spacer-2xs) 0 0;
-    }
+  &__content {
+    display: grid;
+    grid-template-columns: toRem(366) auto;
+    column-gap: toRem(18);
   }
 
-  &__select {
-    --select-width: 220px;
-    --select-padding: 0;
-    --select-height: auto;
-    --select-selected-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
-    --select-margin: 0;
-    --select-option-font-size: var(--font-size-sm);
-    --select-error-message-height: 0;
-
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size-sm);
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--light);
-      margin: 0;
+  &__filter {
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      height: toRem(52);
+      font-weight: bold;
     }
 
-    ::v-deep .sf-select__placeholder {
-      --select-option-font-size: var(--font-size-sm);
-    }
-  }
-
-  &__sort {
-    display: flex;
-    align-items: center;
-    margin: 0 auto 0 var(--spacer-2xl);
-  }
-
-  &__counter {
-    font-family: var(--font-family--secondary);
-    order: 1;
-    @include for-desktop {
-      margin: auto 0 auto auto;
-      order: 0;
-    }
-  }
-
-  &__view {
-    display: flex;
-    align-items: center;
-    order: 0;
-    @include for-desktop {
-      margin: 0 0 0 var(--spacer-2xl);
-      order: 0;
+    &-body {
+      background: white;
+      box-shadow: 0 toRem(1) toRem(2) #EDEBF0;
+      border-radius: toRem(8);
     }
 
-    &-icon {
-      cursor: pointer;
-      margin: 0 var(--spacer-base) 0 0;
+    &-item {
+      border-bottom: toRem(1) solid #F2F3F8;
+      padding: toRem(20) toRem(24);
 
       &:last-child {
+        border: none;
+      }
+
+      ul {
         margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          &.parent {
+            a {
+              color: #253988;
+              font-weight: bold;
+              padding-top: 0;
+
+              .arrow {
+                top: 0;
+                left: toRem(-4);
+              }
+            }
+          }
+
+          a {
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: #231444;
+            padding: toRem(8) toRem(32);
+
+            .arrow {
+              position: absolute;
+              top: toRem(6);
+              right: toRem(-4);
+              height: toRem(18);
+            }
+          }
+        }
+      }
+
+      .checkbox {
+        margin-bottom: toRem(16);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      &--price {
+        .category__filter-item__grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: toRem(20);
+        }
       }
     }
 
-    &-label {
-      margin: 0 var(--spacer-sm) 0 0;
-      font: var(--font-weight--normal) var(--font-size--base) / 1.6 var(--font-family--secondary);
-      text-decoration: none;
-      color: var(--c-link);
-    }
-  }
-}
-
-.sort-by {
-  flex: unset;
-  width: 11.875rem;
-}
-
-.main {
-  display: flex;
-}
-
-.sidebar {
-  flex: 0 0 15%;
-  padding: var(--spacer-sm);
-  border: 1px solid var(--c-light);
-  border-width: 0 1px 0 0;
-}
-
-.sidebar-filters {
-  --overlay-z-index: 3;
-  --sidebar-title-display: none;
-  --sidebar-top-padding: 0;
-  @include for-desktop {
-    --sidebar-content-padding: 0 var(--spacer-xl);
-    --sidebar-bottom-padding: 0 var(--spacer-xl);
-  }
-}
-
-.list {
-  --menu-item-font-size: var(--font-size--sm);
-
-  &__item {
-    &:not(:last-of-type) {
-      --list-item-margin: 0 0 var(--spacer-sm) 0;
-    }
-
-    .nuxt-link-exact-active {
-      text-decoration: underline;
-    }
-  }
-}
-
-.products {
-  box-sizing: border-box;
-  flex: 1;
-  margin: 0;
-
-  &__grid {
-    justify-content: center;
-    @include for-desktop {
-      justify-content: flex-start;
+    &-title {
+      font-size: toRem(12);
+      font-weight: bold;
+      color: #606A92;
+      margin-bottom: toRem(23);
     }
   }
 
-  &__grid,
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  &__product-card {
-    --product-card-title-margin: var(--spacer-base) 0 0 0;
-    --product-card-title-font-weight: var(--font-weight--medium);
-    --product-card-title-margin: var(--spacer-xs) 0 0 0;
-    flex: 1 1 50%;
-    @include for-desktop {
-      --product-card-title-font-weight: var(--font-weight--normal);
-      --product-card-add-button-bottom: var(--spacer-base);
-      --product-card-title-margin: var(--spacer-sm) 0 0 0;
-    }
-  }
-
-  &__product-card-horizontal {
-    flex: 0 0 100%;
-    @include for-mobile {
-      ::v-deep .sf-image {
-        --image-width: 5.3125rem;
-        --image-height: 7.0625rem;
-      }
-    }
-  }
-
-  &__slide-enter {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-
-  &__slide-enter-active {
-    transition: all 0.2s ease;
-    transition-delay: calc(0.1s * var(--index));
-  }
-
-  @include for-desktop {
-    &__grid {
-      margin: var(--spacer-sm) 0 0 var(--spacer-sm);
-    }
-    &__pagination {
+  &__products {
+    &-header {
       display: flex;
-      justify-content: flex-start;
-      margin: var(--spacer-xl) 0 0 0;
-    }
-    &__product-card-horizontal {
-      margin: var(--spacer-lg) 0;
-    }
-    &__product-card {
-      flex: 1 1 25%;
-    }
-    &__list {
-      margin: 0 0 0 var(--spacer-sm);
-    }
-  }
+      justify-content: space-between;
+      height: toRem(52);
 
-  &__show-on-page {
-    display: flex;
-    justify-content: flex-end;
-    align-items: baseline;
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
 
-    &__label {
-      font-family: var(--font-family--secondary);
-      font-size: var(--font-size--sm);
-    }
-  }
-}
+        li {
+          display: inline-block;
+          padding: 0 toRem(6);
 
-.loading {
-  margin: var(--spacer-3xl) auto;
-  @include for-desktop {
-    margin-top: 6.25rem;
-  }
-
-  &--categories {
-    @include for-desktop {
-      margin-top: 3.75rem;
-    }
-  }
-}
-
-::v-deep .sf-sidebar__aside {
-  --sidebar-z-index: 3;
-}
-
-.filters {
-  &__title {
-    --heading-title-font-size: var(--font-size--xl);
-    margin: var(--spacer-xl) 0 var(--spacer-base) 0;
-
-    &:first-child {
-      margin: calc(var(--spacer-xl) + var(--spacer-base)) 0 var(--spacer-xs) 0;
-    }
-  }
-
-  &__colors {
-    display: flex;
-  }
-
-  &__color {
-    margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
-  }
-
-  &__chosen {
-    color: var(--c-text-muted);
-    font-weight: var(--font-weight--normal);
-    font-family: var(--font-family--secondary);
-    position: absolute;
-    right: var(--spacer-xl);
-  }
-
-  &__item {
-    --radio-container-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
-    --radio-background: transparent;
-    --filter-label-color: var(--c-secondary-variant);
-    --filter-count-color: var(--c-secondary-variant);
-    --checkbox-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
-    padding: var(--spacer-sm) 0;
-    border-bottom: 1px solid var(--c-light);
-
-    &:last-child {
-      border-bottom: 0;
+          &:last-child {
+            padding-right: 0;
+          }
+        }
+      }
     }
 
-    @include for-desktop {
-      --checkbox-padding: 0;
-      margin: var(--spacer-sm) 0;
-      border: 0;
-      padding: 0;
+    &-body {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: toRem(16);
     }
-  }
-
-  &__accordion-item {
-    --accordion-item-content-padding: 0;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    width: 100vw;
-  }
-
-  &__buttons {
-    margin: var(--spacer-sm) 0;
-  }
-
-  &__button-clear {
-    --button-background: var(--c-light);
-    --button-color: var(--c-dark-variant);
-    margin: var(--spacer-xs) 0 0 0;
   }
 }
 </style>
